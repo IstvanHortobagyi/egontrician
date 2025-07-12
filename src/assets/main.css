@@ -281,20 +281,6 @@ hr {
 	border-bottom: 2px solid var(--cyan);
 }
 
-@media only screen and (max-width: 767.98px) {
-	hr {
-		margin-top: 2rem;
-		margin-bottom: 2rem;
-	}
-}
-
-@media only screen and (min-width: 768px) {
-	hr {
-		margin-top: 4rem;
-		margin-bottom: 4rem;
-	}
-}
-
 strong, b {
 	font-weight: 700;
 }
@@ -354,19 +340,15 @@ table {
 	width: 100%;
 }
 
-td, th {
-	padding: 1rem;
-}
-
 @media only screen and (max-width: 767.98px) {
 	td, th {
-		padding: .5rem 1rem;
+		padding: .5rem 1rem .5rem 0;
 	}
 }
 
 @media only screen and (min-width: 768px) {
 	td, th {
-		padding: 1rem;
+		padding: 1rem 2rem 1rem 0;
 	}
 }
 
@@ -387,8 +369,20 @@ thead th {
 	align-items: center;
 }
 
+.radbox + .radbox {
+	margin-left: 2rem;
+}
+
 .radbox__input {
-	margin-right: 1.5rem;
+	display: none;
+}
+
+.radbox__input + .radbox__label:before {
+	content: '( ) ';
+}
+
+.radbox__input:checked + .radbox__label:before {
+	content: '(•) ';
 }
 
 input:focus,
@@ -453,6 +447,7 @@ textarea {
 }
 
 .input-container {
+	overflow: hidden;
 	position: relative;
 	display: flex;
 	align-items: center;
@@ -514,7 +509,6 @@ input[type="reset"] {
 	width: auto;
 	padding: .5rem 3rem;
 	font: inherit;
-	font-size: 2rem;
 	color: var(--grey);
 	text-align: center;
 	line-height: 1;
@@ -549,6 +543,10 @@ input[type="submit"]:focus {
 .text-button:hover,
 .text-button:focus {
 	background-color: transparent;
+}
+
+.text-button + .text-button {
+	margin-left: 1rem;
 }
 
 
