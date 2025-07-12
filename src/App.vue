@@ -5,45 +5,81 @@
 				<legend class="card__title">Ügyfél Adatai</legend>
 				<div class="card__content">
 					<div class="form-group">
-						<label class="form-group__label" for="customer-name">Név:</label>
-						<div class="form-group__input-container">
-							<input v-model="personalDetails.customerName" id="customer-name" class="form-group__input" type="text">
-							<div class="form-group__input-background" :style="{width: personalDetails.customerName.length + 'ch'}"></div>
+						<label class="label" for="customer-name">Név:</label>
+						<div class="input-container">
+							<input v-model="personalDetails.customerName" id="customer-name" class="input" type="text">
+							<div class="input-background" :style="{width: personalDetails.customerName.length + 1 + 'ch'}"></div>
+							<div class="input-caret" :style="{left: personalDetails.customerName.length + 1 + 'ch'}"></div>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="form-group__label" for="customer-zip">Irányítószám:</label>
-						<div class="form-group__input-container">
-							<input v-model="personalDetails.customerZip" id="customer-zip" class="form-group__input" type="number">
+						<label class="label" for="customer-zip">Irányítószám:</label>
+						<div class="input-container">
+							<input v-model="personalDetails.customerZip" id="customer-zip" class="input" type="number">
+							<div class="input-background" :style="{width: personalDetails.customerZip.toString().length + 1 + 'ch'}"></div>
+							<div class="input-caret" :style="{left: personalDetails.customerZip.toString().length + 1 + 'ch'}"></div>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="form-group__label" for="customer-city">Város:</label>
+						<label class="label" for="customer-city">Város:</label>
 						<!-- TODO -->
-						<div class="form-group__input-container">
-							<input id="customer-city" class="form-group__input" type="text">
+						<div class="input-container">
+							<input v-model="personalDetails.customerCity" id="customer-city" class="input" type="text">
+							<div class="input-background" :style="{width: personalDetails.customerCity.length + 1 + 'ch'}"></div>
+							<div class="input-caret" :style="{left: personalDetails.customerCity.length + 1 + 'ch'}"></div>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="form-group__label" for="customer-address">Lakcím:</label>
-						<div class="form-group__input-container">
-							<input v-model="personalDetails.customerAddress" id="customer-address" class="form-group__input" type="text">
+						<label class="label" for="customer-address">Lakcím:</label>
+						<div class="input-container">
+							<input v-model="personalDetails.customerAddress" id="customer-address" class="input" type="text">
+							<div class="input-background" :style="{width: personalDetails.customerAddress.length + 1 + 'ch'}"></div>
+							<div class="input-caret" :style="{left: personalDetails.customerAddress.length + 1 + 'ch'}"></div>
 						</div>
 					</div>
 				</div>
 			</fieldset>
 			<fieldset class="card">
 				<legend class="card__title">Feladatok</legend>
-				<div class="card__content">
-					<div class="form-group">
-						<label class="form-group__label" for="work-details">Új Feladat</label>
-						<div class="form-group__input-container">
-							<input v-model="workDetail" id="work-details" class="form-group__input" type="text">
+				<div class="card__content pb-0">
+					<div class="form-group mb-0">
+						<label class="label" for="work-details">Új Feladat</label>
+						<div class="input-container">
+							<input v-model="workDetail" id="work-details" class="input" type="text">
+							<div class="input-background" :style="{width: workDetail.length + 1 + 'ch'}"></div>
+							<div class="input-caret" :style="{left: workDetail.length + 1 + 'ch'}"></div>
 						</div>
-						<button @click.prevent="pushWorkDetail">Hozzáad</button>
+						<button class="btn btn--small ml-1" @click.prevent="pushWorkDetail($event)">+</button>
 					</div>
 				</div>
 				<hr>
+				<table>
+					<thead>
+						<tr>
+							<th>Feladat Neve</th>
+							<th>Műveletek</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="(work, index) in this.workDetails" :key="index">
+							<td>
+								<div v-if="isEditing[index]" class="input-container">
+									<input v-model="workDetails[index]" class="input" type="text">
+									<div class="input-background" :style="{width: workDetails[index].length + 1 + 'ch'}"></div>
+									<div class="input-caret" :style="{left: workDetails[index].length + 1 + 'ch'}"></div>
+								</div>
+								<span v-else>{{ work }}</span>
+							</td>
+							<td>
+								<button class="text-button" @click.prevent="toggleEdit(index)">{{isEditing[index] ? "[&nbsp;Mentés&nbsp;]" : "[&nbsp;Szerkesztés&nbsp;]"}}</button>
+								&nbsp;
+								<button class="text-button" @click.prevent="removeWork(index)">[&nbsp;Törlés&nbsp;]</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+
 			</fieldset>
 			<fieldset>
 				<label for="item-name">Anyag neve</label>
@@ -57,7 +93,7 @@
 				</select>
 				<label for="item-price"></label>
 				<input v-model="itemPrice" id="item-price" type="number">
-				<button @click.prevent="pushItem">Hozzáad</button>
+				<button @click.prevent="pushItem($event)">Hozzáad</button>
 			</fieldset>
 			<fieldset>
 				<label for="labour-cost">Munkadíj</label>
@@ -65,12 +101,6 @@
 			</fieldset>
 		</form>
 		<div>
-			<div v-for="(work, index) in this.workDetails" :key="index">
-				<input v-if="isEditing[index]" v-model="workDetails[index]" type="text">
-				<span v-else>{{ work }}</span>
-				<button @click.prevent="toggleEdit(index)">{{isEditing[index] ? "Mentés" : "Szerkesztés"}}</button>
-				<button @click.prevent="removeWork(index)">Törlés</button>
-			</div>
 			<div v-for="(item, index) in this.items" :key="index">
 				<input v-if="isEditing[index]" v-model="items[index].name" type="text">
 				<span v-else>{{ item.name }}</span>
@@ -149,6 +179,7 @@ export default {
 			personalDetails: {
 				customerName: "",
 				customerZip: "",
+				customerCity: "",
 				customerAddress: ""
 			},
 			workDetails: [],
@@ -159,12 +190,14 @@ export default {
 	},
 
 	methods: {
-		pushWorkDetail() {
+		pushWorkDetail(event) {
 			this.workDetails.push(this.workDetail)
 			this.workDetail = ""
+
+			event.target.blur()
 		},
 
-		pushItem() {
+		pushItem(event) {
 			this.items.push({
 				name: this.itemName,
 				quantity: this.itemQuantity,
@@ -177,10 +210,13 @@ export default {
 			this.itemName= ""
 			this.itemQuantity= ""
 			this.itemPrice= ""
+
+			event.target.blur()
 		},
 
 		toggleEdit(index) {
 			this.isEditing[index] = !this.isEditing[index]
+			index.target.blur()
 		},
 
 		removeWork(index) {
