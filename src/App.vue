@@ -11,7 +11,7 @@
         <input v-model="personalDetails.customerAddress" id="customer-address" type="text">
       </fieldset>
       <fieldset>
-        <label for="work-details">Mit köll csinálni</label>
+        <label for="work-details">Mit köll csinálni!</label>
         <input v-model="workDetail" id="work-details" type="text">
         <button @click.prevent="pushWorkDetail">Hozzáad</button>
       </fieldset>
