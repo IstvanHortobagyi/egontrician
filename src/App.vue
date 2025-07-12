@@ -76,10 +76,10 @@
 					{{ totalCost }}
 				</p>
 				<p>Kelt:
-					<!-- {{ moment().format('LL') }} -->
+					 {{ currentDate }}
 				</p>
 				<p>Ajánlat érvényessége:
-					<!-- {{ moment().add(2, 'weeks').format('LL') }} -->
+					 {{ expirationDate }}
 				</p>
 				<button @click="htmltopdf('element-to-print')">Teszt</button>
 			</div>
@@ -120,7 +120,9 @@ export default {
 				{ customerAddress: "" }
 			],
 			workDetails: [],
-			items: []
+			items: [],
+      currentDate: moment().format('LL'),
+      expirationDate: moment().add(2, 'weeks').format('LL')
 		}
 	},
 
