@@ -8,6 +8,7 @@
 						<label class="form-group__label" for="customer-name">Név:</label>
 						<div class="form-group__input-container">
 							<input v-model="personalDetails.customerName" id="customer-name" class="form-group__input" type="text">
+							<div class="form-group__input-background" :style="{width: personalDetails.customerName.length + 'ch'}"></div>
 						</div>
 					</div>
 					<div class="form-group">
@@ -92,6 +93,12 @@
 	<section class="section section--output">
 		<div id="element-to-print">
 			<p>
+				{{ personalDetails.customerName }}
+			</p>
+			<p>
+				{{ personalDetails.customerName.length }}
+			</p>
+			<p>
 				{{ this.items }}
 			</p>
 			<p>
@@ -139,11 +146,11 @@ export default {
 
 
 
-			personalDetails: [
-				{ customerName: "" },
-				{ customerZip: "" },
-				{ customerAddress: "" }
-			],
+			personalDetails: {
+				customerName: "",
+				customerZip: "",
+				customerAddress: ""
+			},
 			workDetails: [],
 			items: [],
       currentDate: moment().format('LL'),
@@ -222,8 +229,8 @@ export default {
 			},
 			set() {
 				return this.materialCost + this.labourCost
-			}
-		}
+			},
+		},
 	}
 }
 

@@ -478,6 +478,11 @@ textarea {
 	background-color: var(--blue);
 }
 
+.form-group__input-background {
+	height: 100%;
+	background-color: var(--blue);
+}
+
 
 
 /* Buttons */
