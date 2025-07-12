@@ -1,90 +1,117 @@
 <template>
-	<main class="main">
-		<section class="input">
-			<form>
-				<fieldset>
-					<legend>Kutya</legend>
-					<label for="customer-name">Név</label>
-					<input v-model="personalDetails.customerName" id="customer-name" type="text">
-					<label for="customer-zip">Irányítószám</label>
-					<input v-model="personalDetails.customerZip" id="customer-zip" type="number">
-					<label for="customer-address">Lakcím</label>
-					<input v-model="personalDetails.customerAddress" id="customer-address" type="text">
-				</fieldset>
-				<fieldset>
-					<label for="work-details">Mit köll csinálni!</label>
-					<input v-model="workDetail" id="work-details" type="text">
-					<button @click.prevent="pushWorkDetail">Hozzáad</button>
-				</fieldset>
-				<fieldset>
-					<label for="item-name">Anyag neve</label>
-					<input v-model="itemName" id="item-name" type="text">
-					<label for="item-quantity">Darabszám/hossz</label>
-					<input v-model="itemQuantity" id="item-quantity" type="number">
-					<select v-model="itemQuantityMeasure">
-						<option value="db">db</option>
-						<option value="m">m</option>
-						<option value="zsák">zsák</option>
-					</select>
-					<label for="item-price"></label>
-					<input v-model="itemPrice" id="item-price" type="number">
-					<button @click.prevent="pushItem">Hozzáad</button>
-				</fieldset>
-				<fieldset>
-					<label for="labour-cost">Munkadíj</label>
-					<input v-model="labourCost" id="labour-cost" type="number">
-				</fieldset>
-			</form>
-			<div>
-				<div v-for="(work, index) in this.workDetails" :key="index">
-					<input v-if="isEditing[index]" v-model="workDetails[index]" type="text">
-					<span v-else>{{ work }}</span>
-					<button @click.prevent="toggleEdit(index)">{{isEditing[index] ? "Mentés" : "Szerkesztés"}}</button>
-					<button @click.prevent="removeWork(index)">Törlés</button>
+	<section class="section section--input">
+		<form>
+			<fieldset class="card">
+				<legend class="card__title">Ügyfél Adatai</legend>
+				<div class="card__content">
+					<div class="form-group">
+						<label class="form-group__label" for="customer-name">Név:</label>
+						<div class="form-group__input-container">
+							<input v-model="personalDetails.customerName" id="customer-name" class="form-group__input" type="text">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="form-group__label" for="customer-zip">Irányítószám:</label>
+						<div class="form-group__input-container">
+							<input v-model="personalDetails.customerZip" id="customer-zip" class="form-group__input" type="number">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="form-group__label" for="customer-city">Város:</label>
+						<!-- TODO -->
+						<div class="form-group__input-container">
+							<input id="customer-city" class="form-group__input" type="text">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="form-group__label" for="customer-address">Lakcím:</label>
+						<div class="form-group__input-container">
+							<input v-model="personalDetails.customerAddress" id="customer-address" class="form-group__input" type="text">
+						</div>
+					</div>
 				</div>
-				<div v-for="(item, index) in this.items" :key="index">
-					<input v-if="isEditing[index]" v-model="items[index].name" type="text">
-					<span v-else>{{ item.name }}</span>
-					<input v-if="isEditing[index]" v-model="items[index].quantity" type="number">
-					<span v-else>{{ item.quantity }}</span>
-					<select v-if="isEditing[index]" v-model="items[index].quantitymeasure">
-						<option value="db">db</option>
-						<option value="m">m</option>
-						<option value="zsák">zsák</option>
-					</select>
-					<span v-else>{{ item.quantitymeasure }}</span>
-					<input v-if="isEditing[index]" v-model="items[index].price" type="number">
-					<span v-else>{{ item.price }}</span>
-					<span v-if="!isEditing[index]">{{ item.price * item.quantity }}</span>
-					<button @click.prevent="toggleEdit(index)">{{isEditing[index] ? "Mentés" : "Szerkesztés"}}</button>
-					<button @click.prevent="removeWork(index)">Törlés</button>
+			</fieldset>
+			<fieldset class="card">
+				<legend class="card__title">Feladatok</legend>
+				<div class="card__content">
+					<div class="form-group">
+						<label class="form-group__label" for="work-details">Új Feladat</label>
+						<div class="form-group__input-container">
+							<input v-model="workDetail" id="work-details" class="form-group__input" type="text">
+						</div>
+						<button @click.prevent="pushWorkDetail">Hozzáad</button>
+					</div>
 				</div>
+				<hr>
+			</fieldset>
+			<fieldset>
+				<label for="item-name">Anyag neve</label>
+				<input v-model="itemName" id="item-name" type="text">
+				<label for="item-quantity">Darabszám/hossz</label>
+				<input v-model="itemQuantity" id="item-quantity" type="number">
+				<select v-model="itemQuantityMeasure">
+					<option value="db">db</option>
+					<option value="m">m</option>
+					<option value="zsák">zsák</option>
+				</select>
+				<label for="item-price"></label>
+				<input v-model="itemPrice" id="item-price" type="number">
+				<button @click.prevent="pushItem">Hozzáad</button>
+			</fieldset>
+			<fieldset>
+				<label for="labour-cost">Munkadíj</label>
+				<input v-model="labourCost" id="labour-cost" type="number">
+			</fieldset>
+		</form>
+		<div>
+			<div v-for="(work, index) in this.workDetails" :key="index">
+				<input v-if="isEditing[index]" v-model="workDetails[index]" type="text">
+				<span v-else>{{ work }}</span>
+				<button @click.prevent="toggleEdit(index)">{{isEditing[index] ? "Mentés" : "Szerkesztés"}}</button>
+				<button @click.prevent="removeWork(index)">Törlés</button>
 			</div>
-		</section>
-		<section class="output">
-			<div id="element-to-print">
-				<p>
-					{{ this.items }}
-				</p>
-				<p>
-					{{ this.workDetails }}
-				</p>
-				<p>
-					{{ materialCost }}
-				</p>
-				<p>
-					{{ totalCost }}
-				</p>
-				<p>Kelt:
-					 {{ currentDate }}
-				</p>
-				<p>Ajánlat érvényessége:
-					 {{ expirationDate }}
-				</p>
-				<button @click="htmltopdf('element-to-print')">Teszt</button>
+			<div v-for="(item, index) in this.items" :key="index">
+				<input v-if="isEditing[index]" v-model="items[index].name" type="text">
+				<span v-else>{{ item.name }}</span>
+				<input v-if="isEditing[index]" v-model="items[index].quantity" type="number">
+				<span v-else>{{ item.quantity }}</span>
+				<select v-if="isEditing[index]" v-model="items[index].quantitymeasure">
+					<option value="db">db</option>
+					<option value="m">m</option>
+					<option value="zsák">zsák</option>
+				</select>
+				<span v-else>{{ item.quantitymeasure }}</span>
+				<input v-if="isEditing[index]" v-model="items[index].price" type="number">
+				<span v-else>{{ item.price }}</span>
+				<span v-if="!isEditing[index]">{{ item.price * item.quantity }}</span>
+				<button @click.prevent="toggleEdit(index)">{{isEditing[index] ? "Mentés" : "Szerkesztés"}}</button>
+				<button @click.prevent="removeWork(index)">Törlés</button>
 			</div>
-		</section>
-	</main>
+		</div>
+	</section>
+	<section class="section section--output">
+		<div id="element-to-print">
+			<p>
+				{{ this.items }}
+			</p>
+			<p>
+				{{ this.workDetails }}
+			</p>
+			<p>
+				{{ materialCost }}
+			</p>
+			<p>
+				{{ totalCost }}
+			</p>
+			<p>Kelt:
+				{{ currentDate }}
+			</p>
+			<p>Ajánlat érvényessége:
+				{{ expirationDate }}
+			</p>
+			<button @click="htmltopdf('element-to-print')">Teszt</button>
+		</div>
+	</section>
 </template>
 
 <script>
@@ -98,8 +125,6 @@ moment.locale('hu')
 
 window.html2canvas = html2canvas
 window.jsPDF = jsPDF
-
-// const workDetails = ref([])
 
 export default {
 	data() {
