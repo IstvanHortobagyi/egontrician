@@ -1,46 +1,478 @@
-@import './base.css';
+/* Reset */
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed,  figure, figcaption, footer, header, hgroup,  menu, nav, output, ruby, section, summary, time, mark, audio, video { margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline; }
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block; }
+ol, ul { list-style: none; }
+blockquote, q { quotes: none; }
+blockquote:before, blockquote:after, q:before, q:after { content: ''; content: none; }
+table { border-collapse: collapse; border-spacing: 0; }
+
+
+
+/* Webfonts */
+
+		/*TODO*/
+
+
+
+/* Variables */
+
+:root {
+	--serif: 'Libertinus Math', serif;
+	--mono: 'Cascadia Code', monospace;
+
+	--text: #485460;
+	--text-dark: #1e272e;
+	--text-light: #808e9b;
+
+	--bg: #d1ccc0;
+	--bg-dark: #aaa69d;
+	--bg-light: #f7f1e3;
+
+	--color: #45aaf2;
+	--color-dark: #3867d6;
+
+	--transition-duration: .25s;
+	--border-radius: 1rem;
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
+@media only screen and (max-width: 767.98px) {
+	:root {
+		--spacer-text: 1rem;
+		--spacer-block: 2rem;
+	}
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
+@media only screen and (min-width: 768px) and (max-width: 991.98px) {
+	:root {
+		--spacer-text: 1.5rem;
+		--spacer-block: 3rem;
+	}
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+@media only screen and (min-width: 992px) {
+	:root {
+		--spacer-text: 2rem;
+		--spacer-block: 4rem;
+	}
 }
 
-#element-to-print {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  color: #181818;
-  background-color: #00bd7e;
-  grid-gap: 2rem;
-  align-items: center;
-  justify-items: center;
-  font-size: 24px;
+
+
+/* Base */
+
+::selection {
+	color: #FFF;
+	background-color: var(--color);
 }
+
+html {
+	scroll-behavior: smooth;
+	font-size: 62.5%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html { scroll-behavior: initial; }
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	color: var(--text);
+}
+
+@media only screen and (max-width: 767.98px) {
+	body {
+		font-size: 1.6rem;
+		letter-spacing: -.25px;
+		line-height: 1.6;
+	}
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991.98px) {
+	body {
+		font-size: 1.8rem;
+		letter-spacing: -.325px;
+		line-height: 1.7;
+	}
+}
+
+@media only screen and (min-width: 992px) {
+	body {
+		font-size: 2rem;
+		letter-spacing: -.4px;
+		line-height: 1.8;
+	}
+}
+
+img {
+	max-width: 100%;
+	height: auto;
+}
+
+.main {
+	flex-grow: 1;
+}
+
+.container {
+	max-width: 100rem;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+@media only screen and (max-width: 767.98px) {
+	.container {
+		padding-left: 1rem;
+		padding-right: 1rem;
+	}
+}
+
+@media only screen and (min-width: 768px) {
+	.container {
+		padding-left: 2rem;
+		padding-right: 2rem;
+	}
+}
+
+
+
+/* Typography */
+
+h1, .h1,
+h2, .h2,
+h3, .h3,
+h4, .h4,
+h5, .h5,
+h6, .h6 {
+	overflow-wrap: break-word;
+	font-weight: 700;
+	color: var(--text-dark);
+	line-height: 1.2;
+}
+
+h1, .h1 {
+	font-weight: 300;
+}
+
+@media only screen and (max-width: 767.98px) {
+	h1, .h1 {
+		font-size: 2.8rem;
+		letter-spacing: -0.028em;
+		margin: 0 0 3rem;
+	}
+
+	h2, .h2 {
+		font-size: 2.4rem;
+		letter-spacing: -0.024em;
+		margin: 2.5rem 0 2rem;
+	}
+
+	h3, .h3 {
+		font-size: 2rem;
+		letter-spacing: -0.02em;
+		margin: 2rem 0 1.5rem;
+	}
+
+	h4, .h4 {
+		font-size: 1.6rem;
+		letter-spacing: -0.016em;
+		margin: 2rem 0 1.5rem;
+	}
+
+	h5, .h5,
+	h6, .h6 {
+		margin: 1rem 0;
+	}
+}
+
+@media only screen and (min-width: 768px) {
+	h1, .h1 {
+		font-size: 3.91rem;
+		letter-spacing: -0.061em;
+		margin: 0 0 4rem;
+	}
+
+	h2, .h2 {
+		font-size: 3.13rem;
+		letter-spacing: -0.049em;
+		margin: 3rem 0 2.5rem;
+	}
+
+	h3, .h3 {
+		font-size: 2.5rem;
+		letter-spacing: -0.039em;
+		margin: 2.5rem 0 2rem;
+	}
+
+	h4, .h4 {
+		font-size: 2rem;
+		letter-spacing: -0.031em;
+		margin: 2.5rem 0 2rem;
+	}
+
+	h5, .h5,
+	h6, .h6 {
+		margin: 1.5rem 0;
+	}
+}
+
+p {
+	margin-bottom: var(--spacer-text);
+}
+
+ul, ol {
+	margin-left: 3rem;
+	margin-bottom: var(--spacer-text);
+}
+
+li ul,
+li ol {
+	margin-bottom: 0;
+}
+
+ul {
+	list-style-type: disc;
+}
+
+ol {
+	list-style-type: decimal;
+}
+
+li {
+	margin-bottom: .5rem;
+}
+
+li::marker {
+	font-weight: 700;
+	color: var(--text-dark);
+}
+
+dt {
+	font-weight: 700;
+}
+
+a {
+	text-decoration: none;
+	color: var(--color);
+	transition: color var(--transition-duration);
+	border-bottom: 1px solid var(--bg);
+}
+
+a:hover,
+a:focus {
+	color: var(--color-dark);
+}
+
+hr {
+	border: 0;
+	border-bottom: 1px solid var(--bg-dark);
+}
+
+@media only screen and (max-width: 767.98px) {
+	hr {
+		margin-top: 2rem;
+		margin-bottom: 2rem;
+	}
+}
+
+@media only screen and (min-width: 768px) {
+	hr {
+		margin-top: 4rem;
+		margin-bottom: 4rem;
+	}
+}
+
+strong, b {
+	font-weight: 700;
+}
+
+em {
+	font-style: italic;
+}
+
+small {
+	font-size: 87.5%;
+}
+
+sub {
+	vertical-align: sub;
+}
+
+sup {
+	vertical-align: super;
+}
+
+cite {
+	font-style: italic;
+}
+
+code, pre, var, kbd {
+	font-family: monospace;
+	overflow-wrap: break-word;
+	white-space: pre-wrap;
+}
+
+abbr, acronym {
+	text-decoration: none;
+	border-bottom: 1px dashed var(--bg-dark);
+}
+
+figure {
+	padding: 1rem;
+	background-color: var(--bg);
+}
+
+figcaption {
+	font-size: 1.6rem;
+	text-align: center;
+}
+
+.text-center { text-align: center; }
+
+
+
+/* Tables */
+
+.table {
+	overflow-x: auto;
+	margin-bottom: var(--spacer-text);
+}
+
+table {
+	width: 100%;
+}
+
+td, th {
+	padding: 1rem;
+}
+
+@media only screen and (max-width: 767.98px) {
+	td, th {
+		padding: .5rem 1rem;
+	}
+}
+
+@media only screen and (min-width: 768px) {
+	td, th {
+		padding: 1rem;
+	}
+}
+
+th {
+	font-weight: 700;
+	text-align: left;
+}
+
+thead th {
+	border-bottom: .25rem solid var(--text-light);
+}
+
+tbody tr:nth-of-type(2n+1) {
+	background-color: var(--bg-light);
+}
+
+
+
+/* Forms */
+
+.form__group {
+	margin-bottom: 2rem;
+}
+
+.radbox {
+	display: flex;
+	align-items: center;
+}
+
+.radbox__input {
+	margin-right: 1.5rem;
+}
+
+input,
+select,
+textarea {
+	box-sizing: border-box;
+	font: inherit;
+	width: 100%;
+	padding: .5rem 1.5rem;
+	border: 1px solid var(--bg-dark);
+	border-radius: var(--border-radius);
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+	width: initial;
+	cursor: pointer;
+	transform: scale(1.5);
+}
+
+textarea {
+	resize: vertical;
+	overflow: auto;
+	min-width: 100%;
+	max-width: 100%;
+	min-height: 20rem;
+}
+
+
+
+/* Buttons */
+
+.btn,
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+	cursor: pointer;
+	display: inline-block;
+	width: auto;
+	padding: 1.5rem 2rem;
+	font: inherit;
+	font-weight: 700;
+	color: #FFF;
+	text-align: center;
+	line-height: 1;
+	border: 0;
+	border-radius: var(--border-radius);
+	background-color: var(--color);
+	transition: color var(--transition-duration), background-color var(--transition-duration);
+}
+
+.btn:hover,
+.btn:focus,
+button:hover,
+button:focus,
+input[type="button"]:hover,
+input[type="button"]:focus,
+input[type="submit"]:hover,
+input[type="submit"]:focus {
+	color: #FFF;
+	background-color: var(--color-dark);
+}
+
+
+
+/* INPUT */
+
+.input {
+	font-family: var(--mono);
+}
+
+
+
+/* OUTPUT */
+
+.output {
+	font-family: var(--serif);
+}
+
+
+
+/* Utility */
+
+.mt-0 { margin-top: 0; }
+.mb-0 { margin-bottom: 0; }
+
+.mt-block { margin-top: var(--spacer-block); }
+.mb-block { margin-bottom: var(--spacer-block); }
