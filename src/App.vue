@@ -2,7 +2,7 @@
 	<section class="section section--input">
 		<form>
 			<fieldset class="card">
-				<legend class="card__title">Ügyfél Adatai</legend>
+				<legend class="card__title">Ügyfél Adatok</legend>
 				<div class="card__content">
 					<div class="form-group">
 						<label class="label" for="customer-name">Név:</label>
@@ -53,7 +53,7 @@
 				</div>
 				<hr v-if="workDetails.length">
 				<div v-if="workDetails.length" class="card__content">
-					<table>
+					<table class="table table--input">
 						<thead>
 							<tr>
 								<th>Feladat Neve</th>
@@ -71,8 +71,8 @@
 									<span v-else>{{ work }}</span>
 								</td>
 								<td>
-									<button class="text-button" @click.prevent="toggleEdit(index)" type="button">{{isEditing[index] ? "[&nbsp;Mentés&nbsp;]" : "[&nbsp;Szerkesztés&nbsp;]"}}</button>
-									<button class="text-button" @click.prevent="removeWork(index)" type="button">[&nbsp;Törlés&nbsp;]</button>
+									<button class="text-button" @click.prevent="toggleEdit(index)" type="button">{{isEditing[index] ? "[Mentés]" : "[Szerkesztés]"}}</button>
+									<button class="text-button" @click.prevent="removeWork(index)" type="button">[Törlés]</button>
 								</td>
 							</tr>
 						</tbody>
@@ -120,11 +120,11 @@
 							<div class="input-caret" :style="{left: itemPrice.toString().length + 1 + 'ch'}"></div>
 						</div>
 					</div>
-					<button @click.prevent="pushItem()" type="button">Hozzáad</button>
+					<button @click.prevent="pushItem()" class="btn btn--small" type="button">+</button>
 				</div>
 				<hr v-if="items.length">
 				<div v-if="items.length" class="card__content">
-					<table>
+					<table class="table table--input">
 						<thead>
 							<tr>
 								<th>Anyag</th>
@@ -158,51 +158,157 @@
 										<div class="input-caret" :style="{left: items[index].price.toString().length + 1 + 'ch'}"></div>
 									</div>
 									<span v-else>{{ item.price }}</span>
-									<span v-if="!isEditing[index]">{{ item.quantity * item.price }}</span>
-									<!-- TODO: Total Price kiíratás -->
+									<!-- <span v-if="!isEditing[index]">{{ item.quantity * item.price }}</span> -->
 								</td>
 								<td>
-									<button class="text-button" @click.prevent="toggleEdit(index)" type="button">{{isEditing[index] ? "[&nbsp;Mentés&nbsp;]" : "[&nbsp;Szerkesztés&nbsp;]"}}</button>
-									<button class="text-button" @click.prevent="removeItem(index)" type="button">[&nbsp;Törlés&nbsp;]</button>
+									<button class="text-button" @click.prevent="toggleEdit(index)" type="button">{{isEditing[index] ? "[Mentés]" : "[Szerkesztés]"}}</button>
+									<button class="text-button" @click.prevent="removeItem(index)" type="button">[Törlés]</button>
 								</td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
 			</fieldset>
-			<fieldset>
-				<label for="labour-cost">Munkadíj</label>
-				<input v-model="labourCost" id="labour-cost" type="number">
+			<fieldset class="card">
+				<legend class="card__title">Egyéb Költségek</legend>
+				<div class="card__content">
+					<div class="form-group">
+						<label class="label" for="ancillary-cost-name">Megnevezés</label>
+						<div class="input-container">
+							<input id="ancillary-cost-name" class="input" type="text">
+							<!-- TODO: ":style" -->
+							<div class="input-background" style="{width: TODO.length + 1 + 'ch'}"></div>
+							<div class="input-caret" style="{left: TODO.length + 1 + 'ch'}"></div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="label" for="ancillary-cost-price">Ár</label>
+						<div class="input-container">
+							<input id="ancillary-cost-price" class="input" type="number">
+							<!-- TODO: ":style" -->
+							<div class="input-background" style="{width: TODO.length + 1 + 'ch'}"></div>
+							<div class="input-caret" style="{left: TODO.length + 1 + 'ch'}"></div>
+						</div>
+					</div>
+					<button class="btn btn--small" type="button">+</button>
+				</div>
+				<hr>
+				<div class="card__content">
+					<table class="table table--input">
+						<thead>
+							<tr>
+								<th>Megnevezés</th>
+								<th>Ár</th>
+								<th>Műveletek</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Név</td>
+								<td>50.000</td>
+								<td>
+									<button class="text-button" type="button">[Szerkesztés]</button>
+									<button class="text-button" type="button">[Törlés]</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</fieldset>
 		</form>
+		<button @click="htmltopdf('element-to-print')">PDF Letöltése</button>
 	</section>
 	<section class="section section--output">
-		<div id="element-to-print">
-			<p>
-				{{ personalDetails.customerName }}
-			</p>
-			<p>
-				{{ personalDetails.customerName.length }}
-			</p>
-			<p>
-				{{ this.items }}
-			</p>
-			<p>
-				{{ this.workDetails }}
-			</p>
-			<p>
-				{{ materialCost }}
-			</p>
-			<p>
-				{{ totalCost }}
-			</p>
-			<p>Kelt:
-				{{ currentDate }}
-			</p>
-			<p>Ajánlat érvényessége:
-				{{ expirationDate }}
-			</p>
-			<button @click="htmltopdf('element-to-print')">Teszt</button>
+		<div class="paper-bg">
+			<div id="element-to-print" class="paper">
+				<header class="paper__header">
+					<!-- <img src="" alt=""> -->
+					<strong>Stefán Egon e.v.</strong> <br>
+					<address>2081 Piliscsaba, Ferenc-forrás útja 45.</address>
+					<dl class="header-details">
+						<div class="header-details__item">
+							<dt class="header-details__key">Adószám:</dt>
+							<dd class="header-details__value">88888888-8-88</dd>
+						</div>
+						<div class="header-details__item">
+							<dt class="header-details__key">Telefon:</dt>
+							<dd class="header-details__value"><a href="tel:+36307331194">+36307331194</a></dd>
+						</div>
+						<div class="header-details__item">
+							<dt class="header-details__key">Email:</dt>
+							<dd class="header-details__value"><a href="mailto:egon@sevill.hu">egon@sevill.hu</a></dd>
+						</div>
+					</dl>
+				</header>
+
+				<strong>{{ personalDetails.customerName ? personalDetails.customerName : "Vevő Neve" }}</strong>
+				<address>
+					{{ personalDetails.customerZip ? personalDetails.customerZip : "Irányítószám" }}
+					{{ personalDetails.customerCity ? personalDetails.customerCity : "Város" }},
+					{{ personalDetails.customerAddress ? personalDetails.customerAddress : "Lakcím" }}
+				</address>
+
+				<h3>Feladatok</h3>
+				<ul>
+					<li v-for="task in this.workDetails">{{ task }}</li>
+				</ul>
+
+				<h3>Költségek</h3>
+				<table class="table table--output">
+					<tr>
+						<td colspan="4"><strong>Anyagköltség</strong></td>
+					</tr>
+					<tr>
+						<th>Megnevezés</th>
+						<th>Mennyiség</th>
+						<th>Egységár</th>
+						<th class="text-right">Összesen</th>
+					</tr>
+					<tr v-for="material in this.items">
+						<td>{{ material.name }}</td>
+						<td>{{ material.quantity }}&nbsp;{{ material.unit }}</td>
+						<td>{{ material.price }}&nbsp;Ft/{{ material.unit }}</td>
+						<td class="text-right">{{ material.total }}&nbsp;Ft</td>
+					</tr>
+					<tr>
+						<th colspan="3">Anyagköltség összesen</th>
+						<td class="text-right"><strong>{{ materialCost }}&nbsp;Ft</strong></td>
+					</tr>
+					<tr>
+						<td></td>
+					</tr>
+					<tr>
+						<td colspan="4"><strong>Egyéb Költségek</strong></td>
+					</tr>
+					<tr>
+						<th colspan="3">Megnevezés</th>
+						<th class="text-right">Összesen</th>
+					</tr>
+					<tr>
+						<td colspan="3">Munkadíj</td>
+						<td class="text-right">120000&nbsp;Ft</td>
+						<!-- TODO: ezres tördelés -->
+					</tr>
+					<tr>
+						<td colspan="3">Üzemanyag-költség</td>
+						<td class="text-right">7500&nbsp;Ft</td>
+					</tr>
+					<tr>
+						<th colspan="3">Egyéb költségek összesen</th>
+						<td class="text-right"><strong>{{ totalCost }}&nbsp;Ft</strong></td>
+					</tr>
+					<tr>
+						<td></td>
+					</tr>
+					<tr class="table__footer">
+						<td colspan="3"><h3 class="mt-0">Végösszeg</h3></td>
+						<td class="text-right"><h3 class="mt-0">{{ totalCost }}&nbsp;Ft</h3></td>
+					</tr>
+				</table>
+
+				<p>Kelt: Piliscsaba, {{ currentDate }}</p>
+				<p>Ajánlat érvényessége: {{ expirationDate }}</p>
+			</div>
 		</div>
 	</section>
 </template>
@@ -227,7 +333,7 @@ export default {
 			itemQuantity: "",
 			itemUnit: "darab",
 			itemPrice: "",
-			labourCost: 5000,
+			labourCost: "",
 			isEditing: ref([]),
 
 
