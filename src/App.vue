@@ -22,7 +22,6 @@
 					</div>
 					<div class="form-group">
 						<label class="label" for="customer-city">Város:</label>
-						<!-- TODO -->
 						<div class="input-container">
 							<input v-model="personalDetails.customerCity" id="customer-city" class="input" type="text">
 							<div class="input-background" :style="{width: personalDetails.customerCity.length + 1 + 'ch'}"></div>
@@ -45,15 +44,15 @@
 					<div class="form-group mb-0">
 						<label class="label" for="work-details">Új feladat</label>
 						<div class="input-container">
-							<input v-model="workDetail" id="work-details" class="input" type="text">
+							<input v-model="workDetail" @keyup.enter="pushWorkDetail()" id="work-details" class="input" type="text">
 							<div class="input-background" :style="{width: workDetail.length + 1 + 'ch'}"></div>
 							<div class="input-caret" :style="{left: workDetail.length + 1 + 'ch'}"></div>
 						</div>
-						<button class="btn btn--small ml-1" @click.prevent="pushWorkDetail($event)">+</button>
+						<button class="btn btn--small ml-1" @click.prevent="pushWorkDetail()" type="button">+</button>
 					</div>
 				</div>
-				<hr v-if="workDetails[0]">
-				<div v-if="workDetails[0]" class="card__content">
+				<hr v-if="workDetails.length">
+				<div v-if="workDetails.length" class="card__content">
 					<table>
 						<thead>
 							<tr>
@@ -65,15 +64,15 @@
 							<tr v-for="(work, index) in this.workDetails" :key="index">
 								<td>
 									<div v-if="isEditing[index]" class="input-container">
-										<input v-model="workDetails[index]" class="input" type="text">
+										<input v-model="workDetails[index]" @keyup.enter="toggleEdit(index)" class="input" type="text">
 										<div class="input-background" :style="{width: workDetails[index].length + 1 + 'ch'}"></div>
 										<div class="input-caret" :style="{left: workDetails[index].length + 1 + 'ch'}"></div>
 									</div>
 									<span v-else>{{ work }}</span>
 								</td>
 								<td>
-									<button class="text-button" @click.prevent="toggleEdit(index)">{{isEditing[index] ? "[&nbsp;Mentés&nbsp;]" : "[&nbsp;Szerkesztés&nbsp;]"}}</button>
-									<button class="text-button" @click.prevent="removeWork(index)">[&nbsp;Törlés&nbsp;]</button>
+									<button class="text-button" @click.prevent="toggleEdit(index)" type="button">{{isEditing[index] ? "[&nbsp;Mentés&nbsp;]" : "[&nbsp;Szerkesztés&nbsp;]"}}</button>
+									<button class="text-button" @click.prevent="removeWork(index)" type="button">[&nbsp;Törlés&nbsp;]</button>
 								</td>
 							</tr>
 						</tbody>
@@ -86,7 +85,7 @@
 					<div class="form-group">
 						<label class="label" for="item-name">Anyag neve:</label>
 						<div class="input-container">
-							<input v-model="itemName" id="item-name" class="input" type="text">
+							<input v-model="itemName" @keyup.enter="pushItem()" id="item-name" class="input" type="text">
 							<div class="input-background" :style="{width: itemName.length + 1 + 'ch'}"></div>
 							<div class="input-caret" :style="{left: itemName.length + 1 + 'ch'}"></div>
 						</div>
@@ -94,42 +93,37 @@
 					<div class="form-group">
 						<label class="label" for="item-quantity">Mennyiség:</label>
 						<div class="input-container">
-							<input v-model="itemQuantity" id="item-quantity" class="input" type="number">
+							<input v-model="itemQuantity" @keyup.enter="pushItem()" id="item-quantity" class="input" type="number">
 							<div class="input-background" :style="{width: itemQuantity.toString().length + 1 + 'ch'}"></div>
 							<div class="input-caret" :style="{left: itemQuantity.toString().length + 1 + 'ch'}"></div>
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="radbox">
-							<input id="radio1" class="radbox__input" type="radio" name="unit">
+							<input v-model="itemUnit" value="darab" id="radio1" class="radbox__input" type="radio" name="unit">
 							<label for="radio1" class="radbox__label">darab</label>
 						</div>
 						<div class="radbox">
-							<input id="radio2" class="radbox__input" type="radio" name="unit">
+							<input v-model="itemUnit" value="méter" id="radio2" class="radbox__input" type="radio" name="unit">
 							<label for="radio2" class="radbox__label">méter</label>
 						</div>
 						<div class="radbox">
-							<input id="radio3" class="radbox__input" type="radio" name="unit">
+							<input v-model="itemUnit" value="zsák" id="radio3" class="radbox__input" type="radio" name="unit">
 							<label for="radio3" class="radbox__label">zsák</label>
 						</div>
-						<!-- <select v-model="itemQuantityMeasure">
-							<option value="db">db</option>
-							<option value="m">m</option>
-							<option value="zsák">zsák</option>
-						</select> -->
 					</div>
 					<div class="form-group">
 						<label class="label" for="item-price">Egységár:</label>
 						<div class="input-container">
-							<input v-model="itemPrice" id="item-price" class="input" type="number">
+							<input v-model="itemPrice" @keyup.enter="pushItem()" id="item-price" class="input" type="number">
 							<div class="input-background" :style="{width: itemPrice.toString().length + 1 + 'ch'}"></div>
 							<div class="input-caret" :style="{left: itemPrice.toString().length + 1 + 'ch'}"></div>
 						</div>
 					</div>
-					<button @click.prevent="pushItem($event)">Hozzáad</button>
+					<button @click.prevent="pushItem()" type="button">Hozzáad</button>
 				</div>
-				<hr>
-				<div class="card__content">
+				<hr v-if="items.length">
+				<div v-if="items.length" class="card__content">
 					<table>
 						<thead>
 							<tr>
@@ -143,7 +137,7 @@
 							<tr v-for="(item, index) in this.items" :key="index">
 								<td>
 									<div v-if="isEditing[index]" class="input-container">
-										<input v-model="items[index].name" class="input" type="text">
+										<input v-model="items[index].name" @keyup.enter="toggleEdit(index)" class="input" type="text">
 										<div class="input-background" :style="{width: items[index].name.length + 1 + 'ch'}"></div>
 										<div class="input-caret" :style="{left: items[index].name.length + 1 + 'ch'}"></div>
 									</div>
@@ -151,7 +145,7 @@
 								</td>
 								<td>
 									<div v-if="isEditing[index]" class="input-container">
-										<input v-model="items[index].quantity" class="input" type="number">
+										<input v-model="items[index].quantity" @keyup.enter="toggleEdit(index)" class="input" type="number">
 										<div class="input-background" :style="{width: items[index].quantity.toString().length + 1 + 'ch'}"></div>
 										<div class="input-caret" :style="{left: items[index].quantity.toString().length + 1 + 'ch'}"></div>
 									</div>
@@ -159,35 +153,21 @@
 								</td>
 								<td>
 									<div v-if="isEditing[index]" class="input-container">
-										<input v-model="items[index].price" class="input" type="number">
+										<input v-model="items[index].price" @keyup.enter="toggleEdit(index)" class="input" type="number">
 										<div class="input-background" :style="{width: items[index].price.toString().length + 1 + 'ch'}"></div>
 										<div class="input-caret" :style="{left: items[index].price.toString().length + 1 + 'ch'}"></div>
 									</div>
 									<span v-else>{{ item.price }}</span>
+									<span v-if="!isEditing[index]">{{ item.quantity * item.price }}</span>
 									<!-- TODO: Total Price kiíratás -->
 								</td>
 								<td>
-									<button class="text-button" @click.prevent="toggleEdit(index)">{{isEditing[index] ? "[&nbsp;Mentés&nbsp;]" : "[&nbsp;Szerkesztés&nbsp;]"}}</button>
-									<!-- TODO: removeItem -->
-									<button class="text-button" @click.prevent="removeWork(index)">[&nbsp;Törlés&nbsp;]</button>
+									<button class="text-button" @click.prevent="toggleEdit(index)" type="button">{{isEditing[index] ? "[&nbsp;Mentés&nbsp;]" : "[&nbsp;Szerkesztés&nbsp;]"}}</button>
+									<button class="text-button" @click.prevent="removeItem(index)" type="button">[&nbsp;Törlés&nbsp;]</button>
 								</td>
 							</tr>
 						</tbody>
 					</table>
-
-
-
-					<!-- <select v-if="isEditing[index]" v-model="items[index].quantitymeasure">
-						<option value="db">db</option>
-						<option value="m">m</option>
-						<option value="zsák">zsák</option>
-					</select>
-					<span v-else>{{ item.quantitymeasure }}</span>
-
-					<span v-if="!isEditing[index]">{{ item.price * item.quantity }}</span>
-
-					<button @click.prevent="toggleEdit(index)">{{isEditing[index] ? "Mentés" : "Szerkesztés"}}</button>
-					<button @click.prevent="removeWork(index)">Törlés</button> -->
 				</div>
 			</fieldset>
 			<fieldset>
@@ -245,7 +225,7 @@ export default {
 			workDetail: "",
 			itemName: "",
 			itemQuantity: "",
-			itemQuantityMeasure: "db",
+			itemUnit: "darab",
 			itemPrice: "",
 			labourCost: 5000,
 			isEditing: ref([]),
@@ -273,30 +253,33 @@ export default {
 			event.target.blur()
 		},
 
-		pushItem(event) {
+		pushItem() {
 			this.items.push({
 				name: this.itemName,
 				quantity: this.itemQuantity,
-				quantitymeasure: this.itemQuantityMeasure,
+				unit: this.itemUnit,
 				price: this.itemPrice,
-				total: this.itemPrice * this.itemQuantity,
+				total: this.itemQuantity * this.itemPrice
 			})
 
 			this.workDetail= ""
 			this.itemName= ""
 			this.itemQuantity= ""
+			this.itemUnit= "darab"
 			this.itemPrice= ""
-
-			event.target.blur()
 		},
 
 		toggleEdit(index) {
 			this.isEditing[index] = !this.isEditing[index]
-			index.target.blur()
 		},
 
 		removeWork(index) {
 			this.workDetails.splice(index, 1)
+			this.isEditing.splice(index, 1)
+		},
+
+		removeItem(index) {
+			this.items.splice(index, 1)
 			this.isEditing.splice(index, 1)
 		},
 
