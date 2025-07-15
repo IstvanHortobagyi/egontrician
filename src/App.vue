@@ -93,7 +93,7 @@
 					<div class="form-group">
 						<label class="label" for="item-quantity">Mennyiség:</label>
 						<div class="input-container">
-							<input v-model="itemQuantity" @keyup.enter="pushItem()" id="item-quantity" class="input" type="number">
+							<input v-model.number="itemQuantity" @keyup.enter="pushItem()" id="item-quantity" class="input" type="number">
 							<div class="input-background" :style="{width: itemQuantity.toString().length + 1 + 'ch'}"></div>
 							<div class="input-caret" :style="{left: itemQuantity.toString().length + 1 + 'ch'}"></div>
 						</div>
@@ -115,7 +115,7 @@
 					<div class="form-group">
 						<label class="label" for="item-price">Egységár:</label>
 						<div class="input-container">
-							<input v-model="itemPrice" @keyup.enter="pushItem()" id="item-price" class="input" type="number">
+							<input v-model.number="itemPrice" @keyup.enter="pushItem()" id="item-price" class="input" type="number">
 							<div class="input-background" :style="{width: itemPrice.toString().length + 1 + 'ch'}"></div>
 							<div class="input-caret" :style="{left: itemPrice.toString().length + 1 + 'ch'}"></div>
 						</div>
@@ -145,7 +145,7 @@
 								</td>
 								<td>
 									<div v-if="isEditing[index]" class="input-container">
-										<input v-model="materials[index].quantity" @keyup.enter="toggleEdit(index)" class="input" type="number">
+										<input v-model.number="materials[index].quantity" @keyup.enter="toggleEdit(index)" class="input" type="number">
 										<div class="input-background" :style="{width: materials[index].quantity.toString().length + 1 + 'ch'}"></div>
 										<div class="input-caret" :style="{left: materials[index].quantity.toString().length + 1 + 'ch'}"></div>
 									</div>
@@ -153,7 +153,7 @@
 								</td>
 								<td>
 									<div v-if="isEditing[index]" class="input-container">
-										<input v-model="materials[index].price" @keyup.enter="toggleEdit(index)" class="input" type="number">
+										<input v-model.number="materials[index].price" @keyup.enter="toggleEdit(index)" class="input" type="number">
 										<div class="input-background" :style="{width: materials[index].price.toString().length + 1 + 'ch'}"></div>
 										<div class="input-caret" :style="{left: materials[index].price.toString().length + 1 + 'ch'}"></div>
 									</div>
@@ -280,7 +280,7 @@
 						<td>{{ material.name }}</td>
 						<td>{{ material.quantity }}&nbsp;{{ material.unit }}</td>
 						<td>{{ formatNumber(material.price) }}&nbsp;Ft/{{ material.unit }}</td>
-						<td class="text-right">{{ formatNumber(material.total) }}&nbsp;Ft</td>
+						<td class="text-right">{{ formatNumber(material.price * material.quantity) }}&nbsp;Ft</td>
 					</tr>
 					<tr>
 						<th colspan="3">Anyagköltség összesen</th>
@@ -296,25 +296,20 @@
 						<th colspan="3">Megnevezés</th>
 						<th class="text-right">Összesen</th>
 					</tr>
-					<tr>
-						<td colspan="3">Munkadíj</td>
-						<td class="text-right">120000&nbsp;Ft</td>
-						<!-- TODO: ezres tördelés -->
-					</tr>
-					<tr>
-						<td colspan="3">Üzemanyag-költség</td>
-						<td class="text-right">7500&nbsp;Ft</td>
+					<tr v-for="ancillary in this.ancillaryCosts">
+						<td colspan="3">{{ ancillary.name }}</td>
+						<td class="text-right">{{ formatNumber(ancillary.price) }}&nbsp;Ft</td>
 					</tr>
 					<tr>
 						<th colspan="3">Egyéb költségek összesen</th>
-						<td class="text-right"><strong>{{ totalCost }}&nbsp;Ft</strong></td>
+						<td class="text-right"><strong>{{ formatNumber(ancillaryCost) }}&nbsp;Ft</strong></td>
 					</tr>
 					<tr>
 						<td></td>
 					</tr>
 					<tr class="table__footer">
 						<td colspan="3"><h3 class="mt-0">Végösszeg</h3></td>
-						<td class="text-right"><h3 class="mt-0">{{ totalCost }}&nbsp;Ft</h3></td>
+						<td class="text-right"><h3 class="mt-0">{{ formatNumber(totalCost) }}&nbsp;Ft</h3></td>
 					</tr>
 				</table>
 
@@ -347,7 +342,6 @@ export default {
 			itemPrice: "",
 			ancillaryCostName: "",
 			ancillaryCostPrice: "",
-			labourCost: "",
 			isEditing: ref([]),
 
 
@@ -438,30 +432,27 @@ export default {
 
 
 	computed: {
-		materialCost: {
-			get() {
-				let MaterialTotal = 0;
-				for (let i in this.materials) {
-					MaterialTotal += this.materials[i].total
-				}
-				return MaterialTotal;
-			},
-			set() {
-				let MaterialTotal = 0;
-				for (let i in this.materials) {
-					MaterialTotal += this.materials[i].total
-				}
-				return MaterialTotal
-			}
-		},
 		totalCost: {
 			get() {
-				return this.materialCost + this.labourCost
+				return this.materialCost + this.ancillaryCost
 			},
 			set() {
-				return this.materialCost + this.labourCost
+				return this.materialCost + this.ancillaryCost
 			},
 		},
+		materialCost() {
+		return this.materials.reduce((sum, item) => {
+				const price = parseFloat(item.price);
+				const quantity = parseFloat(item.quantity);
+				return sum + (isNaN(price) ? 0 : price * quantity);
+			}, 0);
+		},
+		ancillaryCost() {
+			return this.ancillaryCosts.reduce((sum, item) => {
+				const price = parseFloat(item.price);
+				return sum + (isNaN(price) ? 0 : price);
+			}, 0);
+		}
 	}
 }
 
