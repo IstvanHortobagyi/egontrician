@@ -267,50 +267,52 @@
 
 				<h3>Költségek</h3>
 				<table class="table table--output">
-					<tr>
-						<td colspan="4"><strong>Anyagköltség</strong></td>
-					</tr>
-					<tr>
-						<th>Megnevezés</th>
-						<th>Mennyiség</th>
-						<th>Egységár</th>
-						<th class="text-right">Összesen</th>
-					</tr>
-					<tr v-for="material in this.materials">
-						<td>{{ material.name }}</td>
-						<td>{{ material.quantity }}&nbsp;{{ material.unit }}</td>
-						<td>{{ formatNumber(material.price) }}&nbsp;Ft/{{ material.unit }}</td>
-						<td class="text-right">{{ formatNumber(material.price * material.quantity) }}&nbsp;Ft</td>
-					</tr>
-					<tr>
-						<th colspan="3">Anyagköltség összesen</th>
-						<td class="text-right"><strong>{{ formatNumber(materialCost) }}&nbsp;Ft</strong></td>
-					</tr>
-					<tr>
-						<td></td>
-					</tr>
-					<tr>
-						<td colspan="4"><strong>Egyéb Költségek</strong></td>
-					</tr>
-					<tr>
-						<th colspan="3">Megnevezés</th>
-						<th class="text-right">Összesen</th>
-					</tr>
-					<tr v-for="ancillary in this.ancillaryCosts">
-						<td colspan="3">{{ ancillary.name }}</td>
-						<td class="text-right">{{ formatNumber(ancillary.price) }}&nbsp;Ft</td>
-					</tr>
-					<tr>
-						<th colspan="3">Egyéb költségek összesen</th>
-						<td class="text-right"><strong>{{ formatNumber(ancillaryCost) }}&nbsp;Ft</strong></td>
-					</tr>
-					<tr>
-						<td></td>
-					</tr>
-					<tr class="table__footer">
-						<td colspan="3"><h3 class="mt-0">Végösszeg</h3></td>
-						<td class="text-right"><h3 class="mt-0">{{ formatNumber(totalCost) }}&nbsp;Ft</h3></td>
-					</tr>
+					<tbody>
+						<tr>
+							<td colspan="4"><strong>Anyagköltség</strong></td>
+						</tr>
+						<tr>
+							<th>Megnevezés</th>
+							<th>Mennyiség</th>
+							<th>Egységár</th>
+							<th class="text-right">Összesen</th>
+						</tr>
+						<tr v-for="material in this.materials">
+							<td>{{ material.name }}</td>
+							<td>{{ material.quantity }}&nbsp;{{ material.unit }}</td>
+							<td>{{ formatNumber(material.price) }}&nbsp;Ft/{{ material.unit }}</td>
+							<td class="text-right">{{ formatNumber(material.price * material.quantity) }}&nbsp;Ft</td>
+						</tr>
+						<tr>
+							<th colspan="3">Anyagköltség összesen</th>
+							<td class="text-right"><strong>{{ formatNumber(materialCost) }}&nbsp;Ft</strong></td>
+						</tr>
+						<tr>
+							<td></td>
+						</tr>
+						<tr>
+							<td colspan="4"><strong>Egyéb Költségek</strong></td>
+						</tr>
+						<tr>
+							<th colspan="3">Megnevezés</th>
+							<th class="text-right">Összesen</th>
+						</tr>
+						<tr v-for="ancillary in this.ancillaryCosts">
+							<td colspan="3">{{ ancillary.name }}</td>
+							<td class="text-right">{{ formatNumber(ancillary.price) }}&nbsp;Ft</td>
+						</tr>
+						<tr>
+							<th colspan="3">Egyéb költségek összesen</th>
+							<td class="text-right"><strong>{{ formatNumber(ancillaryCost) }}&nbsp;Ft</strong></td>
+						</tr>
+						<tr>
+							<td></td>
+						</tr>
+						<tr class="table__footer">
+							<td colspan="3"><h3 class="mt-0">Végösszeg</h3></td>
+							<td class="text-right"><h3 class="mt-0">{{ formatNumber(totalCost) }}&nbsp;Ft</h3></td>
+						</tr>
+					</tbody>
 				</table>
 
 				<p>Kelt: Piliscsaba, {{ currentDate }}</p>
