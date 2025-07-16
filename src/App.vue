@@ -1,4 +1,11 @@
 <template>
+	<!-- TODO:
+		- Ne lehessen üres sorokat beküldeni
+		- Legyen Adószám mező az Ügyfél Adatoknál, amit nem kötelező kitölteni
+		- Mennyiségnél, ha nem ír be semmit, akkor legyen 1 a default
+		- Csomagot írjuk a Unit-ok közé
+		- Output résznél, amíg nincs hozzáadva egy szakaszhoz semmi, addig elrejthetjük
+	-->
 	<section class="section section--input">
 		<form>
 			<fieldset class="card">
@@ -316,10 +323,19 @@
 				</table>
 
 				<p>Kelt: Piliscsaba, {{ currentDate }}</p>
+				<p>Az árak tájékoztató jellegűek.</p>
 				<p>Ajánlat érvényessége: {{ expirationDate }}</p>
 			</div>
 		</div>
 	</section>
+
+	<dialog class="modal">
+		<div class="modal-container">
+			<h2 class="modal__title">Warning</h2>
+			<p>No network found.</p>
+			<button class="modal__button btn btn--small" type="button">Ok</button>
+		</div>
+	</dialog>
 </template>
 
 <script>

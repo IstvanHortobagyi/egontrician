@@ -418,21 +418,6 @@ textarea {
 	min-height: 20rem;
 }
 
-.card {
-	margin-bottom: 2rem;
-	border: .7rem double var(--cyan);
-}
-
-.card__content {
-	padding: 2rem;
-}
-
-.card__title {
-	padding: 1rem;
-	font-size: 2.6rem;
-	text-align: center;
-}
-
 .form-group {
 	display: flex;
 	align-items: center;
@@ -559,6 +544,63 @@ input[type="submit"]:focus {
 
 .text-button + .text-button {
 	margin-left: 1rem;
+}
+
+
+
+/* Cards */
+
+.card {
+	margin-bottom: 2rem;
+	border: .7rem double var(--cyan);
+}
+
+.card__content {
+	padding: 2rem;
+}
+
+.card__title {
+	padding: 1rem;
+	font-size: 2.6rem;
+	text-align: center;
+}
+
+
+
+/* Modal */
+
+.modal {
+	position: absolute;
+	top: 40%;
+	z-index: 99;
+	min-width: 30rem;
+	padding: .7rem .3rem;
+	color: var(--white);
+	text-align: center;
+	border: 0;
+	background-color: var(--red);
+	box-shadow: 2rem 2rem 0 0 var(--black);
+}
+
+.modal-container {
+	padding-bottom: 3rem;
+	border: .7rem double var(--white);
+}
+
+.modal__title {
+	position: relative;
+	top: -1.4rem;
+	display: inline-block;
+	margin-top: 0;
+	padding: .2rem .8rem;
+	color: var(--red);
+	background-color: var(--white);
+}
+
+.modal__button {
+	margin-top: 1rem;
+	color: var(--black);
+	background-color: var(--yellow);
 }
 
 
