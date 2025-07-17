@@ -1,6 +1,9 @@
 <template>
 	<!-- TODO:
 		- Ne lehessen üres sorokat beküldeni
+		- Előleg mező opcionálisan
+		- PDF margók (https://ekoopmans.github.io/html2pdf.js/#usage)
+		- Modalt bekötni warningok esetén
 	-->
 	<section class="section section--input">
 		<form>
@@ -40,7 +43,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="label" for="customer-address">Adószám(opcionális):</label>
+						<label class="label" for="customer-address">Adószám (opcionális):</label>
 						<div class="input-container">
 							<input v-model="personalDetails.customerTaxNumber" id="customer-address" class="input" type="text">
 							<div class="input-background" :style="{width: personalDetails.customerTaxNumber.length + 1 + 'ch'}"></div>
@@ -248,46 +251,47 @@
 	<section class="section section--output">
 		<div class="paper-bg">
 			<div id="element-to-print" class="paper">
-				<header class="paper__header">
-					<!-- <img src="" alt=""> -->
-					<strong>Stefán Egon e.v.</strong> <br>
-					<address>2081 Piliscsaba, Ferenc-forrás útja 45.</address>
-					<dl class="header-details">
-						<div class="header-details__item">
-							<dt class="header-details__key">Adószám:</dt>
-							<dd class="header-details__value">88888888-8-88</dd>
-						</div>
-						<div class="header-details__item">
-							<dt class="header-details__key">Telefon:</dt>
-							<dd class="header-details__value"><a href="tel:+36307331194">+36307331194</a></dd>
-						</div>
-						<div class="header-details__item">
-							<dt class="header-details__key">Email:</dt>
-							<dd class="header-details__value"><a href="mailto:egon@sevill.hu">egon@sevill.hu</a></dd>
-						</div>
-					</dl>
+				<header class="letterhead">
+					<img class="letterhead__logo" src="https://rolandszabo.photo/assets/favicons/apple-touch-icon.png" alt="TODO">
+					<div class="letterhead__text">
+						<h1 class="h4 letterhead__title">SE-Vill Kft.?</h1>
+						<div>Telefon: <a href="tel:+36307331194">+36307331194</a></div>
+						<div>Email: <a href="mailto:egon@sevill.hu">egon@sevill.hu</a></div>
+					</div>
 				</header>
-
-				<strong>{{ personalDetails.customerName ? personalDetails.customerName : "Vevő Neve" }}</strong>
-				<address>
-					{{ personalDetails.customerZip ? personalDetails.customerZip : "Irányítószám" }}
-					{{ personalDetails.customerCity ? personalDetails.customerCity : "Város" }},
-					{{ personalDetails.customerAddress ? personalDetails.customerAddress : "Lakcím" }}
-				</address>
-				<p>{{ personalDetails.customerTaxNumber ? personalDetails.customerTaxNumber : "Adószám" }}</p>
+				<section class="parties">
+					<div class="party party--left">
+						<h2 class="subheading">Ajánlattevő:</h2>
+						<div><strong class="h3">Stefán Egon e.v.</strong></div>
+						<address class="party__text">2081 Piliscsaba, Ferenc-forrás útja 45.</address>
+						<p class="party__text">Adószám: 90289664-1-23</p>
+					</div>
+					<div class="party party--right">
+						<h2 class="subheading">Ajánlatkérő:</h2>
+						<div><strong class="h3">{{ personalDetails.customerName ? personalDetails.customerName : "Vevő Neve" }}</strong></div>
+						<address class="party__text">
+							{{ personalDetails.customerZip ? personalDetails.customerZip : "Irányítószám" }}
+							{{ personalDetails.customerCity ? personalDetails.customerCity : "Város" }},
+							{{ personalDetails.customerAddress ? personalDetails.customerAddress : "Lakcím" }}
+						</address>
+						<p class="party__text">{{ personalDetails.customerTaxNumber ? "Adószám: " + personalDetails.customerTaxNumber : "Adószám" }}</p>
+					</div>
+				</section>
 
 				<div v-if="workDetails.length">
-					<h3>Feladatok</h3>
+					<h2 class="h3">Feladatok:</h2>
 					<ul>
 						<li v-for="task in this.workDetails">{{ task }}</li>
 					</ul>
 				</div>
 
-				<h3 v-if="ancillaryCosts.length || materials.length">Költségek</h3>
+				<h3 v-if="ancillaryCosts.length || materials.length">Költségek:</h3>
 				<table class="table table--output">
 					<tbody>
 						<tr v-if="materials.length">
-							<td colspan="4"><strong>Anyagköltség</strong></td>
+							<td colspan="4">
+								<h3 class="subheading mb-0">Anyagköltség:</h3>
+							</td>
 						</tr>
 						<tr v-if="materials.length">
 							<th>Megnevezés</th>
@@ -301,15 +305,19 @@
 							<td>{{ formatNumber(material.price) }}&nbsp;Ft/{{ material.unit }}</td>
 							<td class="text-right">{{ formatNumber(material.price * material.quantity) }}&nbsp;Ft</td>
 						</tr>
-						<tr v-if="materials.length">
-							<th colspan="3">Anyagköltség összesen</th>
-							<td class="text-right"><strong>{{ formatNumber(materialCost) }}&nbsp;Ft</strong></td>
+						<tr v-if="materials.length" class="subtotal">
+							<td colspan="3">Részösszesen:</td>
+							<td class="text-right text-dark">
+								<strong>{{ formatNumber(materialCost) }}&nbsp;Ft</strong>
+							</td>
 						</tr>
 						<tr>
 							<td></td>
 						</tr>
 						<tr v-if="ancillaryCosts.length">
-							<td colspan="4"><strong>Egyéb Költségek</strong></td>
+							<td colspan="4">
+								<h3 class="subheading mb-0">Egyéb Költségek:</h3>
+							</td>
 						</tr>
 						<tr v-if="ancillaryCosts.length">
 							<th colspan="3">Megnevezés</th>
@@ -319,23 +327,29 @@
 							<td colspan="3">{{ ancillary.name }}</td>
 							<td class="text-right">{{ formatNumber(ancillary.price) }}&nbsp;Ft</td>
 						</tr>
-						<tr v-if="ancillaryCosts.length">
-							<th colspan="3">Egyéb költségek összesen</th>
-							<td class="text-right"><strong>{{ formatNumber(ancillaryCost) }}&nbsp;Ft</strong></td>
+						<tr v-if="ancillaryCosts.length" class="subtotal">
+							<td colspan="3">Részösszesen:</td>
+							<td class="text-right text-dark">
+								<strong>{{ formatNumber(ancillaryCost) }}&nbsp;Ft</strong>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
 						</tr>
 						<tr>
 							<td></td>
 						</tr>
 						<tr class="table__footer">
 							<td colspan="3"><h3 class="mt-0">Végösszeg</h3></td>
-							<td class="text-right"><h3 class="mt-0">{{ formatNumber(totalCost) }}&nbsp;Ft</h3></td>
+							<td class="text-right">
+								<p class="h3 mt-0">{{ formatNumber(totalCost) }}&nbsp;Ft</p>
+							</td>
 						</tr>
 					</tbody>
 				</table>
 
+				<p><small>Az ajánlat érvényessége: {{ expirationDate }} <br>Fizetni utólag lehetséges, készpénzzel vagy átutalással, számla ellenében. Az árak bruttó árak, alanyi adómentesek (AAM), és tájékoztató jellegűek. </small></p>
 				<p>Kelt: Piliscsaba, {{ currentDate }}</p>
-				<p>Az árak tájékoztató jellegűek.</p>
-				<p>Ajánlat érvényessége: {{ expirationDate }}</p>
 			</div>
 		</div>
 	</section>
@@ -444,7 +458,7 @@ export default {
 		formatNumber(num) {
 			return new Intl.NumberFormat('en-US', {
 				useGrouping: true
-			}).format(num).replace(/,/g, ' ');
+			}).format(num).replace(/,/g, '\u00a0');
 		},
 
 		htmltopdf(element) {

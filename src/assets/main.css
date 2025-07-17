@@ -230,6 +230,20 @@ h1, .h1 {
 	}
 }
 
+.subheading {
+	display: inline-block;
+	margin-top: 0;
+	margin-bottom: 1.5rem;
+	font-size: 2rem;
+	letter-spacing: -.5px;
+	color: var(--text);
+	border-bottom: 1px dashed var(--text-light);
+}
+
+.subtotal {
+	border-top: 1px solid var(--bg-dark);
+}
+
 p {
 	margin-bottom: var(--spacer-text);
 }
@@ -290,7 +304,9 @@ em {
 }
 
 small {
+	display: block;
 	font-size: 87.5%;
+	line-height: 1.4;
 }
 
 sub {
@@ -329,6 +345,8 @@ figcaption {
 .text-center { text-align: center; }
 .text-right { text-align: right; }
 
+.text-dark { color: var(--text-dark); }
+
 
 
 /* Tables */
@@ -362,11 +380,15 @@ th {
 }
 
 .table--output th {
-	font-family: Arial, sans-serif;
-	font-size: 1.3rem;
+	/*font-family: Arial, sans-serif;*/
+	font-size: 1.6rem;
 	color: var(--text-light);
-	text-transform: uppercase;
+	/*text-transform: uppercase;*/
 }
+
+/*.table--output td {
+	font-size: 1.6rem;
+}*/
 
 .table__footer {
 	border-top: .2rem solid var(--text);
@@ -608,7 +630,7 @@ input[type="submit"]:focus {
 /* Content Sections */
 
 .section {
-	padding: 3rem;
+	padding: 3rem 5rem;
 }
 
 .section--input {
@@ -643,19 +665,48 @@ input[type="submit"]:focus {
 	padding: 3rem;
 }
 
-.paper__header {
+.cutout {
+	padding: .5rem 1rem;
+	background: url('images/output-bg.webp') no-repeat center center;
+}
+
+.letterhead {
+	display: grid;
+	grid-template-columns: 8rem 1fr;
+	grid-gap: 2rem;
 	margin-bottom: 2.5rem;
 	padding-bottom: 2.5rem;
 	border-bottom: .2rem solid var(--text);
 }
 
-.header-details__item {
-	display: flex;
+.letterhead__title {
+	margin-top: 0;
+	margin-bottom: 1rem;
 }
 
-.header-details__key {
-	margin-right: 1rem;
-	font-weight: 400;
+.letterhead__text {
+	font-size: 1.6rem;
+	line-height: 1.6;
+}
+
+.parties {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	margin-bottom: 2.5rem;
+	padding-bottom: 2.5rem;
+	border-bottom: .2rem solid var(--text);
+}
+
+@media only screen and (min-width: 480px) {
+	.party--right {
+		text-align: right;
+	}
+}
+
+.party__text {
+	margin-bottom: 0;
+	font-size: 1.6rem;
+	letter-spacing: -.25px;
 }
 
 
