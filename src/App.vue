@@ -4,7 +4,6 @@
 		- Legyen Adószám mező az Ügyfél Adatoknál, amit nem kötelező kitölteni
 		- Mennyiségnél, ha nem ír be semmit, akkor legyen 1 a default
 		- Csomagot írjuk a Unit-ok közé
-		- Output résznél, amíg nincs hozzáadva egy szakaszhoz semmi, addig elrejthetjük
 	-->
 	<section class="section section--input">
 		<form>
@@ -267,48 +266,50 @@
 					{{ personalDetails.customerAddress ? personalDetails.customerAddress : "Lakcím" }}
 				</address>
 
-				<h3>Feladatok</h3>
-				<ul>
-					<li v-for="task in this.workDetails">{{ task }}</li>
-				</ul>
+				<div v-if="workDetails.length">
+					<h3>Feladatok</h3>
+					<ul>
+						<li v-for="task in this.workDetails">{{ task }}</li>
+					</ul>
+				</div>
 
-				<h3>Költségek</h3>
+				<h3 v-if="ancillaryCosts.length || materials.length">Költségek</h3>
 				<table class="table table--output">
 					<tbody>
-						<tr>
+						<tr v-if="materials.length">
 							<td colspan="4"><strong>Anyagköltség</strong></td>
 						</tr>
-						<tr>
+						<tr v-if="materials.length">
 							<th>Megnevezés</th>
 							<th>Mennyiség</th>
 							<th>Egységár</th>
 							<th class="text-right">Összesen</th>
 						</tr>
-						<tr v-for="material in this.materials">
+						<tr v-if="materials.length" v-for="material in this.materials">
 							<td>{{ material.name }}</td>
 							<td>{{ material.quantity }}&nbsp;{{ material.unit }}</td>
 							<td>{{ formatNumber(material.price) }}&nbsp;Ft/{{ material.unit }}</td>
 							<td class="text-right">{{ formatNumber(material.price * material.quantity) }}&nbsp;Ft</td>
 						</tr>
-						<tr>
+						<tr v-if="materials.length">
 							<th colspan="3">Anyagköltség összesen</th>
 							<td class="text-right"><strong>{{ formatNumber(materialCost) }}&nbsp;Ft</strong></td>
 						</tr>
 						<tr>
 							<td></td>
 						</tr>
-						<tr>
+						<tr v-if="ancillaryCosts.length">
 							<td colspan="4"><strong>Egyéb Költségek</strong></td>
 						</tr>
-						<tr>
+						<tr v-if="ancillaryCosts.length">
 							<th colspan="3">Megnevezés</th>
 							<th class="text-right">Összesen</th>
 						</tr>
-						<tr v-for="ancillary in this.ancillaryCosts">
+						<tr v-if="ancillaryCosts.length" v-for="ancillary in this.ancillaryCosts">
 							<td colspan="3">{{ ancillary.name }}</td>
 							<td class="text-right">{{ formatNumber(ancillary.price) }}&nbsp;Ft</td>
 						</tr>
-						<tr>
+						<tr v-if="ancillaryCosts.length">
 							<th colspan="3">Egyéb költségek összesen</th>
 							<td class="text-right"><strong>{{ formatNumber(ancillaryCost) }}&nbsp;Ft</strong></td>
 						</tr>
