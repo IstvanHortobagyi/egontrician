@@ -1,9 +1,6 @@
 <template>
 	<!-- TODO:
 		- Ne lehessen üres sorokat beküldeni
-		- Legyen Adószám mező az Ügyfél Adatoknál, amit nem kötelező kitölteni
-		- Mennyiségnél, ha nem ír be semmit, akkor legyen 1 a default
-		- Csomagot írjuk a Unit-ok közé
 	-->
 	<section class="section section--input">
 		<form>
@@ -40,6 +37,14 @@
 							<input v-model="personalDetails.customerAddress" id="customer-address" class="input" type="text">
 							<div class="input-background" :style="{width: personalDetails.customerAddress.length + 1 + 'ch'}"></div>
 							<div class="input-caret" :style="{left: personalDetails.customerAddress.length + 1 + 'ch'}"></div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="label" for="customer-address">Adószám(opcionális):</label>
+						<div class="input-container">
+							<input v-model="personalDetails.customerTaxNumber" id="customer-address" class="input" type="text">
+							<div class="input-background" :style="{width: personalDetails.customerTaxNumber.length + 1 + 'ch'}"></div>
+							<div class="input-caret" :style="{left: personalDetails.customerTaxNumber.length + 1 + 'ch'}"></div>
 						</div>
 					</div>
 				</div>
@@ -116,6 +121,10 @@
 						<div class="radbox">
 							<input v-model="itemUnit" value="zsák" id="radio3" class="radbox__input" type="radio" name="unit">
 							<label for="radio3" class="radbox__label">zsák</label>
+						</div>
+						<div class="radbox">
+							<input v-model="itemUnit" value="csomag" id="radio4" class="radbox__input" type="radio" name="unit">
+							<label for="radio4" class="radbox__label">csomag</label>
 						</div>
 					</div>
 					<div class="form-group">
@@ -265,6 +274,7 @@
 					{{ personalDetails.customerCity ? personalDetails.customerCity : "Város" }},
 					{{ personalDetails.customerAddress ? personalDetails.customerAddress : "Lakcím" }}
 				</address>
+				<p>{{ personalDetails.customerTaxNumber ? personalDetails.customerTaxNumber : "Adószám" }}</p>
 
 				<div v-if="workDetails.length">
 					<h3>Feladatok</h3>
@@ -369,7 +379,8 @@ export default {
 				customerName: "",
 				customerZip: "",
 				customerCity: "",
-				customerAddress: ""
+				customerAddress: "",
+				customerTaxNumber: ""
 			},
 
 			workDetails: [],
@@ -387,6 +398,10 @@ export default {
 		},
 
 		pushItem() {
+			if (this.itemQuantity === "") {
+				this.itemQuantity = 1
+			}
+
 			this.materials.push({
 				name: this.itemName,
 				quantity: this.itemQuantity,
