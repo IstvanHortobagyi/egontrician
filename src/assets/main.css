@@ -605,7 +605,7 @@ input[type="submit"]:focus {
 }
 
 .modal-container {
-	padding-bottom: 3rem;
+	padding: 0 2rem 3rem;
 	border: .7rem double var(--white);
 }
 

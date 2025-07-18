@@ -354,11 +354,11 @@
 		</div>
 	</section>
 
-	<dialog class="modal">
+	<dialog :open="modalOpen" class="modal">
 		<div class="modal-container">
 			<h2 class="modal__title">Warning</h2>
-			<p>No network found.</p>
-			<button class="modal__button btn btn--small" type="button">Ok</button>
+			<p v-for="e in errors">A(z) {{ e }} mező kitöltése kötelező</p>
+			<button @click.prevent="toggleModal()" class="modal__button btn btn--small" type="button">Ok</button>
 		</div>
 	</dialog>
 </template>
@@ -386,6 +386,7 @@ export default {
 			ancillaryCostName: "",
 			ancillaryCostPrice: "",
 			isEditing: ref([]),
+			modalOpen: false,
 
 
 
@@ -401,14 +402,20 @@ export default {
 			materials: [],
 			ancillaryCosts: [],
       currentDate: moment().format('LL'),
-      expirationDate: moment().add(2, 'weeks').format('LL')
+      expirationDate: moment().add(2, 'weeks').format('LL'),
+
+			errors: []
 		}
 	},
 
 	methods: {
 		pushWorkDetail() {
-			this.workDetails.push(this.workDetail)
-			this.workDetail = ""
+			if (this.validateInputs({"Új feladat" : this.workDetail})) {
+				this.workDetails.push(this.workDetail)
+				this.workDetail = ""
+			} else {
+				this.toggleModal();
+			}
 		},
 
 		pushItem() {
@@ -416,29 +423,41 @@ export default {
 				this.itemQuantity = 1
 			}
 
-			this.materials.push({
-				name: this.itemName,
-				quantity: this.itemQuantity,
-				unit: this.itemUnit,
-				price: this.itemPrice,
-				total: this.itemQuantity * this.itemPrice
-			})
+			if (this.validateInputs({"Anyag neve" : this.itemName, "Egységár" : this.itemPrice})) {
 
-			this.workDetail= ""
-			this.itemName= ""
-			this.itemQuantity= ""
-			this.itemUnit= "darab"
-			this.itemPrice= ""
+				this.materials.push({
+					name: this.itemName,
+					quantity: this.itemQuantity,
+					unit: this.itemUnit,
+					price: this.itemPrice,
+					total: this.itemQuantity * this.itemPrice
+				})
+
+				this.workDetail= ""
+				this.itemName= ""
+				this.itemQuantity= ""
+				this.itemUnit= "darab"
+				this.itemPrice= ""
+
+			} else {
+				this.toggleModal()
+			}
 		},
 
 		pushAncillary() {
-			this.ancillaryCosts.push({
-				name: this.ancillaryCostName,
-				price: this.ancillaryCostPrice,
-			})
+			if (this.validateInputs({"Megnevezés" : this.ancillaryCostName, "Ár": this.ancillaryCostPrice})) {
 
-			this.ancillaryCostName = ""
-			this.ancillaryCostPrice = ""
+				this.ancillaryCosts.push({
+					name: this.ancillaryCostName,
+					price: this.ancillaryCostPrice,
+				})
+
+				this.ancillaryCostName = ""
+				this.ancillaryCostPrice = ""
+
+			} else {
+				this.toggleModal()
+			}
 		},
 
 		toggleEdit(index) {
@@ -461,20 +480,40 @@ export default {
 			}).format(num).replace(/,/g, '\u00a0');
 		},
 
+		toggleModal() {
+			this.modalOpen = !this.modalOpen
+		},
+
+		validateInputs(inputs) {
+			this.errors = [];
+
+			Object.keys(inputs).forEach((key) => {
+				if (inputs[key] === "") {
+					this.errors.push(key)
+				}
+			})
+
+			return this.errors.length <= 0;
+		},
+
 		htmltopdf(element) {
-			html2pdf()
-					.set({
-						margin: 0,
-						filename: 'download.pdf',
-						image: { type: 'jpeg', quality: 1 },
-						html2canvas: {
-							scale: 3,         // ⬅️ Increase to 2 or 3 for sharper text
-							useCORS: true     // ⬅️ If you have external images/fonts
-						},
-						jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-					})
-					.from(document.getElementById(element))
-					.save();
+			if (this.validateInputs({"Név" : this.personalDetails.customerName, "Irányítószám" : this.personalDetails.customerZip, "Város" : this.personalDetails.customerCity, "Lakcím": this.personalDetails.customerAddress})){
+				html2pdf()
+						.set({
+							margin: 0,
+							filename: 'download.pdf',
+							image: { type: 'jpeg', quality: 1 },
+							html2canvas: {
+								scale: 3,         // ⬅️ Increase to 2 or 3 for sharper text
+								useCORS: true     // ⬅️ If you have external images/fonts
+							},
+							jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+						})
+						.from(document.getElementById(element))
+						.save();
+			} else {
+				this.toggleModal()
+			}
 		}
 	},
 
