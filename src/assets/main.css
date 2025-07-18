@@ -240,10 +240,6 @@ h1, .h1 {
 	border-bottom: 1px dashed var(--text-light);
 }
 
-.subtotal {
-	border-top: 1px solid var(--bg-dark);
-}
-
 p {
 	margin-bottom: var(--spacer-text);
 }
@@ -293,6 +289,10 @@ a:focus {
 hr {
 	border: 0;
 	border-bottom: 2px solid var(--cyan);
+}
+
+.hr--black {
+	border-color: var(--black);
 }
 
 strong, b {
@@ -346,6 +346,8 @@ figcaption {
 .text-right { text-align: right; }
 
 .text-dark { color: var(--text-dark); }
+.text-black { color: var(--black); }
+.text-yellow { color: var(--yellow); }
 
 
 
@@ -380,15 +382,13 @@ th {
 }
 
 .table--output th {
-	/*font-family: Arial, sans-serif;*/
 	font-size: 1.6rem;
 	color: var(--text-light);
-	/*text-transform: uppercase;*/
 }
 
-/*.table--output td {
-	font-size: 1.6rem;
-}*/
+.subtotal {
+	border-top: 1px solid var(--bg-dark);
+}
 
 .table__footer {
 	border-top: .2rem solid var(--text);
@@ -478,20 +478,29 @@ textarea {
 	background-position: 0% 57%;
 }
 
-.input-container:before {
-	position: relative;
-	z-index: 1;
-	content: '[';
-	font-size: 2rem;
-	background-color: var(--blue);
-}
-
+.input-container:before,
 .input-container:after {
 	position: relative;
 	z-index: 1;
-	content: ']';
 	font-size: 2rem;
+}
+
+.input-container:before {
+	content: '[';
+}
+
+.input-container:after {
+	content: ']';
+}
+
+.create-edit .input-container:before,
+.create-edit .input-container:after {
 	background-color: var(--blue);
+}
+
+.settings .input-container:before,
+.settings .input-container:after {
+	background-color: var(--grey);
 }
 
 .input-background {
@@ -593,10 +602,11 @@ input[type="submit"]:focus {
 
 .modal {
 	position: absolute;
-	top: 40%;
+	top: 35%;
 	z-index: 99;
 	min-width: 30rem;
 	padding: .7rem .3rem;
+	font-family: var(--mono);
 	color: var(--white);
 	text-align: center;
 	border: 0;
@@ -612,39 +622,88 @@ input[type="submit"]:focus {
 .modal__title {
 	position: relative;
 	top: -1.4rem;
+	font-weight: 400;
 	display: inline-block;
 	margin-top: 0;
-	padding: .2rem .8rem;
+	padding: .2rem 1.4rem;
 	color: var(--red);
 	background-color: var(--white);
 }
 
 .modal__button {
-	margin-top: 1rem;
+	margin-top: 2rem;
+	font-size: 2.4rem;
 	color: var(--black);
 	background-color: var(--yellow);
+}
+
+.modal p {
+	margin-bottom: .5rem;
+}
+
+
+
+/* Menu */
+
+.menu {
+	position: relative;
+	padding: 0 3rem;
+	background-color: var(--turqoise);
+}
+
+.menu__link {
+	display: inline-block;
+	padding: .5rem 2rem;
+	color: var(--black);
+	border: 0;
+}
+
+.menu__link:hover {
+	color: #FFF;
+	background-color: var(--black);
+}
+
+.dropdown-container {
+	position: absolute;
+	z-index: 99;
+	top: 100%;
+	left: 3rem;
+	max-width: 20rem;
+	padding: 1rem .5rem;
+	background-color: var(--turqoise);
+}
+
+.dropdown {
+	padding: 1rem;
+	border: .2rem solid var(--black);
+	margin: 0;
+}
+
+.dropdown__link {
+	display: block;
+	color: var(--white);
 }
 
 
 
 /* Content Sections */
 
-.section {
-	padding: 3rem 5rem;
-}
-
 .section--input {
+	position: relative;
 	font-family: var(--mono);
-	color: var(--cyan);
 	line-height: 1;
 	letter-spacing: 0;
 	background-color: var(--blue);
 }
 
 .section--output {
-	border-left: 1px solid var(--bg-dark);
+	padding: 3rem 5rem;
 	background: url('images/output-bg.webp') no-repeat center center;
 	background-size: cover;
+}
+
+.section__content {
+	padding: 3rem 5rem;
 }
 
 .paper-bg {
@@ -711,6 +770,63 @@ input[type="submit"]:focus {
 
 
 
+/* Create/Edit Screen */
+
+.create-edit {
+	color: var(--cyan);
+}
+
+
+/* Settings Screen */
+
+.settings-container {
+	padding: 1rem .5rem;
+	background-color: var(--grey);
+}
+
+.settings {
+	color: var(--white);
+	border: .7rem double var(--white);
+}
+
+.settings__title-container {
+	text-align: center;
+}
+
+.settings__title {
+	position: relative;
+	top: -1.7rem;
+	display: inline-block;
+	font-weight: 400;
+	margin-top: 0;
+	padding: .2rem 1.4rem;
+	color: var(--grey);
+	background-color: var(--white);
+}
+
+.settings__content {
+	padding: 3rem;
+}
+
+.settings__card {
+	position: relative;
+	margin-bottom: 3rem;
+	padding: 2rem 1rem 1rem;
+	border: 2px solid var(--white);
+}
+
+.settings__card-title {
+	position: absolute;
+	top: -1.4rem;
+	margin: 0;
+	padding: 0 1rem;
+	font-weight: 400;
+	color: var(--yellow);
+	background-color: var(--grey);
+}
+
+
+
 /* Utility */
 
 .mt-0 { margin-top: 0; }
@@ -720,6 +836,7 @@ input[type="submit"]:focus {
 
 .pt-0 { padding-top: 0; }
 .pb-0 { padding-bottom: 0; }
+.pr-0 { padding-right: 0; }
 
 .mt-block { margin-top: var(--spacer-block); }
 .mb-block { margin-bottom: var(--spacer-block); }
