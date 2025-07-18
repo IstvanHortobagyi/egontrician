@@ -1,9 +1,6 @@
 <template>
 	<!-- TODO:
-		- Ne lehessen üres sorokat beküldeni
-		- Előleg mező opcionálisan
 		- PDF margók (https://ekoopmans.github.io/html2pdf.js/#usage)
-		- Modalt bekötni warningok esetén
 	-->
 	<section class="section section--input">
 		<form>
@@ -500,8 +497,10 @@ export default {
 			if (this.validateInputs({"Név" : this.personalDetails.customerName, "Irányítószám" : this.personalDetails.customerZip, "Város" : this.personalDetails.customerCity, "Lakcím": this.personalDetails.customerAddress})){
 				html2pdf()
 						.set({
-							margin: 0,
+							margin: [11, 21, 0, 21],
 							filename: 'download.pdf',
+							autoPaging: 'text',
+							pagebreak: {mode: 'avoid-all'},
 							image: { type: 'jpeg', quality: 1 },
 							html2canvas: {
 								scale: 3,         // ⬅️ Increase to 2 or 3 for sharper text
