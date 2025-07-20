@@ -3,7 +3,7 @@
 		<div class="settings-container">
 			<div class="settings">
 				<div class="settings__title-container">
-					<h1 class="settings__title h3 mb-0">Settings</h1>
+					<h1 class="settings__title h3 mb-0">Beállítások</h1>
 				</div>
 				<div class="settings__content">
 					<div class="settings__card">

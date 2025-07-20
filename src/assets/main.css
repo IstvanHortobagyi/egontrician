@@ -378,7 +378,7 @@ th {
 }
 
 .table--input thead th {
-	border-bottom: .1rem solid var(--cyan);
+	border-bottom: .1rem solid var(--white);
 }
 
 .table--output th {
@@ -776,6 +776,10 @@ input[type="submit"]:focus {
 	color: var(--cyan);
 }
 
+.create-edit .table--input thead th {
+	border-bottom: .1rem solid var(--cyan);
+}
+
 
 /* Settings Screen */
 
@@ -827,10 +831,45 @@ input[type="submit"]:focus {
 
 
 
+/* Home Screen */
+
+.home-container {
+	padding: 1rem .5rem;
+	background-color: var(--turqoise);
+}
+
+.home {
+	color: var(--white);
+	border: .7rem double var(--white);
+}
+
+.home__title-container {
+	text-align: center;
+}
+
+.home__title {
+	position: relative;
+	top: -1.7rem;
+	display: inline-block;
+	font-weight: 400;
+	margin-top: 0;
+	padding: .2rem 1.4rem;
+	color: var(--turqoise);
+	background-color: var(--white);
+}
+
+.home__content {
+	padding: 3rem;
+}
+
+
+
 /* Utility */
 
 .mt-0 { margin-top: 0; }
 .mb-0 { margin-bottom: 0; }
+
+.mb-3 { margin-bottom: 3rem; }
 
 .ml-1 { margin-left: 1rem; }
 

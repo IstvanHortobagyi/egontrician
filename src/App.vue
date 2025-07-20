@@ -1,9 +1,12 @@
 <template>
 	<!-- TODO:
 		- PDF margók (https://ekoopmans.github.io/html2pdf.js/#usage)
-		- Dropdown menüt bekötni [.dropdown-container]
 		- Settings screent bekötni
-		- Splash screen a legelején (~1500ms)
+		- Home oldalon be kell kötni az Új Árajánlat gombot
+		- Kell egy kapcsoló az árajánlathoz, hogy ki lett küldve
+		- Ha rányomok a 2. listaelem szerkesztés gombjára, akkor minden 2. elemet kijelöl a többi listában is
+		- Egyéb költségeknél a két mezőn nincs rajta az @keyup.enter
+		- Egyéb költségeknél a törlés gomb nem jó adatot töröl
 		- Vue Router
 			- Menü képernyő
 				- Listázza a meglévő ajánlatokat
@@ -13,6 +16,7 @@
 				- Bármilyen app setting?
 			- Create/Edit képernyő
 				- Create-nél lenullázni a mezőket
+		- [v2.0] Splash screen a legelején (~1500ms)
 	-->
 	<section class="section section--input">
 		<header class="menu">
@@ -243,15 +247,15 @@
 								<tr v-for="(ancillaryCost, index) in this.ancillaryCosts" :key="index">
 									<td>
 										<div v-if="isEditing[index]" class="input-container">
-											<input v-model="ancillaryCosts[index].name" type="text">
-											<div class="input-background" :style="{width: ancillaryCosts[index].name.toString().length + 1 + 'ch'}"></div>
-											<div class="input-caret" :style="{left: ancillaryCosts[index].name.toString().length + 1 + 'ch'}"></div>
+											<input v-model="ancillaryCosts[index].name" class="input" type="text">
+											<div class="input-background" :style="{width: ancillaryCosts[index].name.length + 1 + 'ch'}"></div>
+											<div class="input-caret" :style="{left: ancillaryCosts[index].name.length + 1 + 'ch'}"></div>
 										</div>
 										<span v-else>{{ ancillaryCost.name }}</span>
 									</td>
 									<td>
 										<div v-if="isEditing[index]" class="input-container">
-											<input v-model="ancillaryCosts[index].price" type="number">
+											<input v-model="ancillaryCosts[index].price" class="input" type="number">
 											<div class="input-background" :style="{width: ancillaryCosts[index].price.toString().length + 1 + 'ch'}"></div>
 											<div class="input-caret" :style="{left: ancillaryCosts[index].price.toString().length + 1 + 'ch'}"></div>
 										</div>
