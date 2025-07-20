@@ -103,15 +103,15 @@
 							<tbody>
 								<tr v-for="(work, index) in this.workDetails" :key="index">
 									<td>
-										<div v-if="isEditing[index]" class="input-container">
-											<input v-model="workDetails[index]" @keyup.enter="toggleEdit(index)" class="input" type="text">
+										<div v-if="isEditingWork[index]" class="input-container">
+											<input v-model="workDetails[index]" @keyup.enter="toggleEdit(index, 'Work')" class="input" type="text">
 											<div class="input-background" :style="{width: workDetails[index].length + 1 + 'ch'}"></div>
 											<div class="input-caret" :style="{left: workDetails[index].length + 1 + 'ch'}"></div>
 										</div>
 										<span v-else>{{ work }}</span>
 									</td>
 									<td>
-										<button class="text-button" @click.prevent="toggleEdit(index)" type="button">{{isEditing[index] ? "[Mentés]" : "[Szerkesztés]"}}</button>
+										<button class="text-button" @click.prevent="toggleEdit(index, 'Work')" type="button">{{isEditingWork[index] ? "[Mentés]" : "[Szerkesztés]"}}</button>
 										<button class="text-button" @click.prevent="removeWork(index)" type="button">[Törlés]</button>
 									</td>
 								</tr>
@@ -180,31 +180,31 @@
 							<tbody>
 								<tr v-for="(item, index) in this.materials" :key="index">
 									<td>
-										<div v-if="isEditing[index]" class="input-container">
-											<input v-model="materials[index].name" @keyup.enter="toggleEdit(index)" class="input" type="text">
+										<div v-if="isEditingMaterial[index]" class="input-container">
+											<input v-model="materials[index].name" @keyup.enter="toggleEdit(index, 'Material')" class="input" type="text">
 											<div class="input-background" :style="{width: materials[index].name.length + 1 + 'ch'}"></div>
 											<div class="input-caret" :style="{left: materials[index].name.length + 1 + 'ch'}"></div>
 										</div>
 										<span v-else>{{ item.name }}</span>
 									</td>
 									<td>
-										<div v-if="isEditing[index]" class="input-container">
-											<input v-model.number="materials[index].quantity" @keyup.enter="toggleEdit(index)" class="input" type="number">
+										<div v-if="isEditingMaterial[index]" class="input-container">
+											<input v-model.number="materials[index].quantity" @keyup.enter="toggleEdit(index, 'Material')" class="input" type="number">
 											<div class="input-background" :style="{width: materials[index].quantity.toString().length + 1 + 'ch'}"></div>
 											<div class="input-caret" :style="{left: materials[index].quantity.toString().length + 1 + 'ch'}"></div>
 										</div>
 										<span v-else>{{ item.quantity }} {{ item.unit }}</span>
 									</td>
 									<td>
-										<div v-if="isEditing[index]" class="input-container">
-											<input v-model.number="materials[index].price" @keyup.enter="toggleEdit(index)" class="input" type="number">
+										<div v-if="isEditingMaterial[index]" class="input-container">
+											<input v-model.number="materials[index].price" @keyup.enter="toggleEdit(index, 'Material')" class="input" type="number">
 											<div class="input-background" :style="{width: materials[index].price.toString().length + 1 + 'ch'}"></div>
 											<div class="input-caret" :style="{left: materials[index].price.toString().length + 1 + 'ch'}"></div>
 										</div>
 										<span v-else>{{ item.price }}</span>
 									</td>
 									<td>
-										<button class="text-button" @click.prevent="toggleEdit(index)" type="button">{{isEditing[index] ? "[Mentés]" : "[Szerkesztés]"}}</button>
+										<button class="text-button" @click.prevent="toggleEdit(index, 'Material')" type="button">{{isEditingMaterial[index] ? "[Mentés]" : "[Szerkesztés]"}}</button>
 										<button class="text-button" @click.prevent="removeItem(index)" type="button">[Törlés]</button>
 									</td>
 								</tr>
@@ -246,24 +246,24 @@
 							<tbody>
 								<tr v-for="(ancillaryCost, index) in this.ancillaryCosts" :key="index">
 									<td>
-										<div v-if="isEditing[index]" class="input-container">
-											<input v-model="ancillaryCosts[index].name" class="input" type="text">
+										<div v-if="isEditingAncillary[index]" class="input-container">
+											<input v-model="ancillaryCosts[index].name" @keyup.enter="toggleEdit(index, 'Ancillary')" class="input" type="text">
 											<div class="input-background" :style="{width: ancillaryCosts[index].name.length + 1 + 'ch'}"></div>
 											<div class="input-caret" :style="{left: ancillaryCosts[index].name.length + 1 + 'ch'}"></div>
 										</div>
 										<span v-else>{{ ancillaryCost.name }}</span>
 									</td>
 									<td>
-										<div v-if="isEditing[index]" class="input-container">
-											<input v-model="ancillaryCosts[index].price" class="input" type="number">
+										<div v-if="isEditingAncillary[index]" class="input-container">
+											<input v-model="ancillaryCosts[index].price" @keyup.enter="toggleEdit(index, 'Ancillary')" class="input" type="number">
 											<div class="input-background" :style="{width: ancillaryCosts[index].price.toString().length + 1 + 'ch'}"></div>
 											<div class="input-caret" :style="{left: ancillaryCosts[index].price.toString().length + 1 + 'ch'}"></div>
 										</div>
 										<span v-else>{{ ancillaryCost.price }}</span>
 									</td>
 									<td>
-										<button class="text-button" @click.prevent="toggleEdit(index)" type="button">{{isEditing[index] ? "[Mentés]" : "[Szerkesztés]"}}</button>
-										<button class="text-button" @click.prevent="removeItem(index)" type="button">[Törlés]</button>
+										<button class="text-button" @click.prevent="toggleEdit(index, 'Ancillary')" type="button">{{isEditingAncillary[index] ? "[Mentés]" : "[Szerkesztés]"}}</button>
+										<button class="text-button" @click.prevent="removeAncillary(index)" type="button">[Törlés]</button>
 									</td>
 								</tr>
 							</tbody>
@@ -272,6 +272,7 @@
 				</fieldset>
 			</form>
 			<button @click="htmltopdf('element-to-print')">PDF Letöltése</button>
+			<button @click.prevent="">Ajánlat Mentése</button>
 
 			<dialog :open="modalOpen" class="modal">
 				<div class="modal-container">
@@ -411,7 +412,9 @@ export default {
 			itemPrice: "",
 			ancillaryCostName: "",
 			ancillaryCostPrice: "",
-			isEditing: ref([]),
+			isEditingWork: ref([]),
+			isEditingMaterial: ref([]),
+			isEditingAncillary: ref([]),
 			modalOpen: false,
 			menuOpen: false,
 			showCreateEdit: true,
@@ -487,18 +490,29 @@ export default {
 			}
 		},
 
-		toggleEdit(index) {
-			this.isEditing[index] = !this.isEditing[index]
+		toggleEdit(index, list) {
+			if (list === "Work") {
+				this.isEditingWork[index] = !this.isEditingWork[index]
+			} else if (list === "Material") {
+				this.isEditingMaterial[index] = !this.isEditingMaterial[index]
+			} else if (list === "Ancillary") {
+				this.isEditingAncillary[index] = !this.isEditingAncillary[index]
+			}
 		},
 
 		removeWork(index) {
 			this.workDetails.splice(index, 1)
-			this.isEditing.splice(index, 1)
+			this.isEditingWork.splice(index, 1)
 		},
 
 		removeItem(index) {
 			this.materials.splice(index, 1)
-			this.isEditing.splice(index, 1)
+			this.isEditingMaterial.splice(index, 1)
+		},
+
+		removeAncillary(index) {
+			this.ancillaryCosts.splice(index, 1)
+			this.isEditingAncillary.splice(index, 1)
 		},
 
 		formatNumber(num) {
@@ -535,6 +549,10 @@ export default {
 			})
 
 			return this.errors.length <= 0;
+		},
+
+		saveOffer() {
+
 		},
 
 		htmltopdf(element) {
