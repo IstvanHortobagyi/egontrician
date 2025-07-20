@@ -16,79 +16,18 @@
 	-->
 	<section class="section section--input">
 		<header class="menu">
-			<a class="menu__link" href="#"><span class="text-yellow">M</span>enü</a>
-			<!-- <div class="dropdown-container">
+			<a @click.prevent="toggleMenu()" class="menu__link" href="#"><span class="text-yellow">M</span>enü</a>
+			<div v-if="menuOpen" class="dropdown-container">
 				<ul class="dropdown">
-					<a class="menu__link dropdown__link" href="#"><span class="text-yellow">A</span>jánlatok</a>
-					<a class="menu__link dropdown__link" href="#"><span class="text-yellow">Ú</span>j Árajánlat</a>
+					<RouterLink @click="goToPage('Home')" class="menu__link dropdown__link" to="/Home" ><span class="text-yellow">A</span>jánlatok</RouterLink>
+					<RouterLink @click="goToPage('CreateEdit')" class="menu__link dropdown__link" to="/" ><span class="text-yellow">Ú</span>j Árajánlat</RouterLink>
 					<hr class="hr--black">
-					<a class="menu__link dropdown__link" href="#"><span class="text-yellow">B</span>eállítások</a>
+					<RouterLink @click="goToPage('Settings')" class="menu__link dropdown__link" to="/Settings"><span class="text-yellow">B</span>eállítások</RouterLink>
 				</ul>
-			</div> -->
-		</header>
-		<!-- <div class="section__content">
-			<div class="settings-container">
-				<div class="settings">
-					<div class="settings__title-container">
-						<h1 class="settings__title h3 mb-0">Settings</h1>
-					</div>
-					<div class="settings__content">
-						<div class="settings__card">
-							<h2 class="settings__card-title h4">Company Details</h2>
-							<form>
-								<div class="form-group">
-									<label class="label" for="name">Name:</label>
-									<div class="input-container">
-										<input id="name" class="input" type="text">
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="label" for="address">Address:</label>
-									<div class="input-container">
-										<input id="address" class="input" type="text">
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="label" for="phone">Phone Number:</label>
-									<div class="input-container">
-										<input id="phone" class="input" type="tel">
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="label" for="email">Email Address:</label>
-									<div class="input-container">
-										<input id="email" class="input" type="email">
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="label" for="taxno">Tax Number:</label>
-									<div class="input-container">
-										<input id="taxno" class="input" type="number">
-									</div>
-								</div>
-							</form>
-						</div>
-
-						<div class="settings__card">
-							<h2 class="settings__card-title h4">App Settings</h2>
-							<form>
-								<div class="form-group">
-									<label class="label" for="name">Placeholder:</label>
-									<div class="input-container">
-										<input id="name" class="input" type="text">
-									</div>
-								</div>
-							</form>
-						</div>
-
-						<div class="text-center">
-							<button class="btn" type="button"><span class="text-black">S</span>ave</button>
-						</div>
-					</div>
-				</div>
 			</div>
-		</div> -->
-		<div class="section__content create-edit">
+		</header>
+		<RouterView v-if="!showCreateEdit" />
+		<div v-if="showCreateEdit" class="section__content create-edit">
 			<form>
 				<fieldset class="card">
 					<legend class="card__title">Ügyfél Adatok</legend>
@@ -470,7 +409,8 @@ export default {
 			ancillaryCostPrice: "",
 			isEditing: ref([]),
 			modalOpen: false,
-
+			menuOpen: false,
+			showCreateEdit: true,
 
 
 			personalDetails: {
@@ -565,6 +505,20 @@ export default {
 
 		toggleModal() {
 			this.modalOpen = !this.modalOpen
+		},
+
+		toggleMenu() {
+			this.menuOpen = !this.menuOpen
+		},
+
+		goToPage(page) {
+			this.toggleMenu();
+			if (page === "CreateEdit") {
+				this.showCreateEdit = true;
+			} else {
+				this.$router.push({path: "/" + page})
+				this.showCreateEdit = false;
+			}
 		},
 
 		validateInputs(inputs) {
