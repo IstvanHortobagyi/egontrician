@@ -1,12 +1,10 @@
 <template>
 	<!-- TODO:
 		- PDF margók (https://ekoopmans.github.io/html2pdf.js/#usage)
+			- index osztható 10-el (példa)
 		- Settings screent bekötni
 		- Home oldalon be kell kötni az Új Árajánlat gombot
 		- Kell egy kapcsoló az árajánlathoz, hogy ki lett küldve
-		- Ha rányomok a 2. listaelem szerkesztés gombjára, akkor minden 2. elemet kijelöl a többi listában is
-		- Egyéb költségeknél a két mezőn nincs rajta az @keyup.enter
-		- Egyéb költségeknél a törlés gomb nem jó adatot töröl
 		- Vue Router
 			- Menü képernyő
 				- Listázza a meglévő ajánlatokat
