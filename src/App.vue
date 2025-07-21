@@ -269,8 +269,9 @@
 					</div>
 				</fieldset>
 			</form>
-			<button @click="htmltopdf('element-to-print')">PDF Letöltése</button>
-			<button @click.prevent="">Ajánlat Mentése</button>
+			<button @click="htmltopdf('element-to-print')"><span class="text-black">P</span>DF Letöltése</button>
+			&nbsp;
+			<button @click.prevent=""><span class="text-black">A</span>jánlat Mentése</button>
 
 			<dialog :open="modalOpen" class="modal">
 				<div class="modal-container">

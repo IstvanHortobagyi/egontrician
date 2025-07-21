@@ -1,7 +1,7 @@
 <template>
 	<div class="section__content">
 		<div class="mb-3 text-center">
-			<button @click="goToPage('CreateEdit')" class="btn" type="button">Új Árajánlat</button>
+			<button @click="goToPage('CreateEdit')" class="btn" type="button"><span class="text-black">Ú</span>j Árajánlat</button>
 		</div>
 		<div class="home-container">
 			<div class="home">
