@@ -4,6 +4,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import { createMemoryHistory, createRouter} from "vue-router";
 import Home from "@/Components/Home.vue";import Settings from "@/Components/Settings.vue";
+import { createPinia } from "pinia";
 
 const routes = [
 	{ path: '/Home', component: Home, name: 'Home' },
@@ -15,4 +16,4 @@ const router = createRouter({
 	routes
 })
 
-createApp(App).use(router).mount('#app')
+createApp(App).use(router).use(createPinia()).mount('#app')

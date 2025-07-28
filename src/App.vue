@@ -2,6 +2,7 @@
 	<!-- TODO:
 		- PDF margók (https://ekoopmans.github.io/html2pdf.js/#usage)
 			- index osztható 10-el (példa)
+			- Pdf custom nevek
 		- Settings screent bekötni
 		- Home oldalon be kell kötni az Új Árajánlat gombot
 		- Kell egy kapcsoló az árajánlathoz, hogy ki lett küldve
@@ -15,6 +16,8 @@
 			- Create/Edit képernyő
 				- Create-nél lenullázni a mezőket
 		- [v2.0] Splash screen a legelején (~1500ms)
+		- Adószám mask
+		- pinia store
 	-->
 	<section class="section section--input">
 		<header class="menu">
@@ -82,15 +85,15 @@
 						<div class="form-group mb-0">
 							<label class="label" for="work-details">Új feladat</label>
 							<div class="input-container">
-								<input v-model="workDetail" @keyup.enter="pushWorkDetail()" id="work-details" class="input" type="text">
-								<div class="input-background" :style="{width: workDetail.length + 1 + 'ch'}"></div>
-								<div class="input-caret" :style="{left: workDetail.length + 1 + 'ch'}"></div>
+								<input v-model="workDetailsStore.workDetail" @keyup.enter="workDetailsStore.pushWorkDetail()" id="work-details" class="input" type="text">
+								<div class="input-background" :style="{width: workDetailsStore.workDetail.length + 1 + 'ch'}"></div>
+								<div class="input-caret" :style="{left: workDetailsStore.workDetail.length + 1 + 'ch'}"></div>
 							</div>
-							<button class="btn btn--small ml-1" @click.prevent="pushWorkDetail()" type="button">+</button>
+							<button class="btn btn--small ml-1" @click.prevent="workDetailsStore.pushWorkDetail()" type="button">+</button>
 						</div>
 					</div>
-					<hr v-if="workDetails.length">
-					<div v-if="workDetails.length" class="card__content">
+					<hr v-if="workDetailsStore.workDetails.length">
+					<div v-if="workDetailsStore.workDetails.length" class="card__content">
 						<table class="table table--input">
 							<thead>
 								<tr>
@@ -99,18 +102,18 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr v-for="(work, index) in this.workDetails" :key="index">
+								<tr v-for="(work, index) in this.workDetailsStore.workDetails" :key="index">
 									<td>
-										<div v-if="isEditingWork[index]" class="input-container">
-											<input v-model="workDetails[index]" @keyup.enter="toggleEdit(index, 'Work')" class="input" type="text">
-											<div class="input-background" :style="{width: workDetails[index].length + 1 + 'ch'}"></div>
-											<div class="input-caret" :style="{left: workDetails[index].length + 1 + 'ch'}"></div>
+										<div v-if="workDetailsStore.isEditingWork[index]" class="input-container">
+											<input v-model="workDetailsStore.workDetails[index]" @keyup.enter="toggleEdit(index, 'Work')" class="input" type="text">
+											<div class="input-background" :style="{width: workDetailsStore.workDetails[index].length + 1 + 'ch'}"></div>
+											<div class="input-caret" :style="{left: workDetailsStore.workDetails[index].length + 1 + 'ch'}"></div>
 										</div>
 										<span v-else>{{ work }}</span>
 									</td>
 									<td>
-										<button class="text-button" @click.prevent="toggleEdit(index, 'Work')" type="button">{{isEditingWork[index] ? "[Mentés]" : "[Szerkesztés]"}}</button>
-										<button class="text-button" @click.prevent="removeWork(index)" type="button">[Törlés]</button>
+										<button class="text-button" @click.prevent="toggleEdit(index, 'Work')" type="button">{{workDetailsStore.isEditingWork[index] ? "[Mentés]" : "[Szerkesztés]"}}</button>
+										<button class="text-button" @click.prevent="workDetailsStore.removeWork(index)" type="button">[Törlés]</button>
 									</td>
 								</tr>
 							</tbody>
@@ -123,49 +126,49 @@
 						<div class="form-group">
 							<label class="label" for="item-name">Anyag neve:</label>
 							<div class="input-container">
-								<input v-model="itemName" @keyup.enter="pushItem()" id="item-name" class="input" type="text">
-								<div class="input-background" :style="{width: itemName.length + 1 + 'ch'}"></div>
-								<div class="input-caret" :style="{left: itemName.length + 1 + 'ch'}"></div>
+								<input v-model="materialStore.itemName" @keyup.enter="materialStore.pushItem()" id="item-name" class="input" type="text">
+								<div class="input-background" :style="{width: materialStore.itemName.length + 1 + 'ch'}"></div>
+								<div class="input-caret" :style="{left: materialStore.itemName.length + 1 + 'ch'}"></div>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="label" for="item-quantity">Mennyiség:</label>
 							<div class="input-container">
-								<input v-model.number="itemQuantity" @keyup.enter="pushItem()" id="item-quantity" class="input" type="number">
-								<div class="input-background" :style="{width: itemQuantity.toString().length + 1 + 'ch'}"></div>
-								<div class="input-caret" :style="{left: itemQuantity.toString().length + 1 + 'ch'}"></div>
+								<input v-model.number="materialStore.itemQuantity" @keyup.enter="pushItem()" id="item-quantity" class="input" type="number">
+								<div class="input-background" :style="{width: materialStore.itemQuantity.toString().length + 1 + 'ch'}"></div>
+								<div class="input-caret" :style="{left: materialStore.itemQuantity.toString().length + 1 + 'ch'}"></div>
 							</div>
 						</div>
 						<div class="form-group">
 							<div class="radbox">
-								<input v-model="itemUnit" value="darab" id="radio1" class="radbox__input" type="radio" name="unit">
+								<input v-model="materialStore.itemUnit" value="darab" id="radio1" class="radbox__input" type="radio" name="unit">
 								<label for="radio1" class="radbox__label">darab</label>
 							</div>
 							<div class="radbox">
-								<input v-model="itemUnit" value="méter" id="radio2" class="radbox__input" type="radio" name="unit">
+								<input v-model="materialStore.itemUnit" value="méter" id="radio2" class="radbox__input" type="radio" name="unit">
 								<label for="radio2" class="radbox__label">méter</label>
 							</div>
 							<div class="radbox">
-								<input v-model="itemUnit" value="zsák" id="radio3" class="radbox__input" type="radio" name="unit">
+								<input v-model="materialStore.itemUnit" value="zsák" id="radio3" class="radbox__input" type="radio" name="unit">
 								<label for="radio3" class="radbox__label">zsák</label>
 							</div>
 							<div class="radbox">
-								<input v-model="itemUnit" value="csomag" id="radio4" class="radbox__input" type="radio" name="unit">
+								<input v-model="materialStore.itemUnit" value="csomag" id="radio4" class="radbox__input" type="radio" name="unit">
 								<label for="radio4" class="radbox__label">csomag</label>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="label" for="item-price">Egységár:</label>
 							<div class="input-container">
-								<input v-model.number="itemPrice" @keyup.enter="pushItem()" id="item-price" class="input" type="number">
-								<div class="input-background" :style="{width: itemPrice.toString().length + 1 + 'ch'}"></div>
-								<div class="input-caret" :style="{left: itemPrice.toString().length + 1 + 'ch'}"></div>
+								<input v-model.number="materialStore.itemPrice" @keyup.enter="materialStore.pushItem()" id="item-price" class="input" type="number">
+								<div class="input-background" :style="{width: materialStore.itemPrice.toString().length + 1 + 'ch'}"></div>
+								<div class="input-caret" :style="{left: materialStore.itemPrice.toString().length + 1 + 'ch'}"></div>
 							</div>
 						</div>
-						<button @click.prevent="pushItem()" class="btn btn--small" type="button">+</button>
+						<button @click.prevent="materialStore.pushItem()" class="btn btn--small" type="button">+</button>
 					</div>
-					<hr v-if="materials.length">
-					<div v-if="materials.length" class="card__content">
+					<hr v-if="materialStore.materials.length">
+					<div v-if="materialStore.materials.length" class="card__content">
 						<table class="table table--input">
 							<thead>
 								<tr>
@@ -176,34 +179,34 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr v-for="(item, index) in this.materials" :key="index">
+								<tr v-for="(item, index) in this.materialStore.materials" :key="index">
 									<td>
-										<div v-if="isEditingMaterial[index]" class="input-container">
-											<input v-model="materials[index].name" @keyup.enter="toggleEdit(index, 'Material')" class="input" type="text">
-											<div class="input-background" :style="{width: materials[index].name.length + 1 + 'ch'}"></div>
-											<div class="input-caret" :style="{left: materials[index].name.length + 1 + 'ch'}"></div>
+										<div v-if="materialStore.isEditingMaterial[index]" class="input-container">
+											<input v-model="materialStore.materials[index].name" @keyup.enter="toggleEdit(index, 'Material')" class="input" type="text">
+											<div class="input-background" :style="{width: materialStore.materials[index].name.length + 1 + 'ch'}"></div>
+											<div class="input-caret" :style="{left: materialStore.materials[index].name.length + 1 + 'ch'}"></div>
 										</div>
 										<span v-else>{{ item.name }}</span>
 									</td>
 									<td>
-										<div v-if="isEditingMaterial[index]" class="input-container">
-											<input v-model.number="materials[index].quantity" @keyup.enter="toggleEdit(index, 'Material')" class="input" type="number">
-											<div class="input-background" :style="{width: materials[index].quantity.toString().length + 1 + 'ch'}"></div>
-											<div class="input-caret" :style="{left: materials[index].quantity.toString().length + 1 + 'ch'}"></div>
+										<div v-if="materialStore.isEditingMaterial[index]" class="input-container">
+											<input v-model.number="materialStore.materials[index].quantity" @keyup.enter="toggleEdit(index, 'Material')" class="input" type="number">
+											<div class="input-background" :style="{width: materialStore.materials[index].quantity.toString().length + 1 + 'ch'}"></div>
+											<div class="input-caret" :style="{left: materialStore.materials[index].quantity.toString().length + 1 + 'ch'}"></div>
 										</div>
 										<span v-else>{{ item.quantity }} {{ item.unit }}</span>
 									</td>
 									<td>
-										<div v-if="isEditingMaterial[index]" class="input-container">
-											<input v-model.number="materials[index].price" @keyup.enter="toggleEdit(index, 'Material')" class="input" type="number">
-											<div class="input-background" :style="{width: materials[index].price.toString().length + 1 + 'ch'}"></div>
-											<div class="input-caret" :style="{left: materials[index].price.toString().length + 1 + 'ch'}"></div>
+										<div v-if="materialStore.isEditingMaterial[index]" class="input-container">
+											<input v-model.number="materialStore.materials[index].price" @keyup.enter="toggleEdit(index, 'Material')" class="input" type="number">
+											<div class="input-background" :style="{width: materialStore.materials[index].price.toString().length + 1 + 'ch'}"></div>
+											<div class="input-caret" :style="{left: materialStore.materials[index].price.toString().length + 1 + 'ch'}"></div>
 										</div>
 										<span v-else>{{ item.price }}</span>
 									</td>
 									<td>
-										<button class="text-button" @click.prevent="toggleEdit(index, 'Material')" type="button">{{isEditingMaterial[index] ? "[Mentés]" : "[Szerkesztés]"}}</button>
-										<button class="text-button" @click.prevent="removeItem(index)" type="button">[Törlés]</button>
+										<button class="text-button" @click.prevent="toggleEdit(index, 'Material')" type="button">{{materialStore.isEditingMaterial[index] ? "[Mentés]" : "[Szerkesztés]"}}</button>
+										<button class="text-button" @click.prevent="materialStore.removeItem(index)" type="button">[Törlés]</button>
 									</td>
 								</tr>
 							</tbody>
@@ -216,23 +219,23 @@
 						<div class="form-group">
 							<label class="label" for="ancillary-cost-name">Megnevezés</label>
 							<div class="input-container">
-								<input v-model="ancillaryCostName" @keyup.enter="pushAncillary()" id="ancillary-cost-name" class="input" type="text">
-								<div class="input-background" :style="{width: ancillaryCostName.length + 1 + 'ch'}"></div>
-								<div class="input-caret" :style="{left: ancillaryCostName.length + 1 + 'ch'}"></div>
+								<input v-model="ancillaryStore.ancillaryCostName" @keyup.enter="ancillaryStore.pushAncillary()" id="ancillary-cost-name" class="input" type="text">
+								<div class="input-background" :style="{width: ancillaryStore.ancillaryCostName.length + 1 + 'ch'}"></div>
+								<div class="input-caret" :style="{left: ancillaryStore.ancillaryCostName.length + 1 + 'ch'}"></div>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="label" for="ancillary-cost-price">Ár</label>
 							<div class="input-container">
-								<input v-model="ancillaryCostPrice" @keyup.enter="pushAncillary()" id="ancillary-cost-price" class="input" type="number">
-								<div class="input-background" :style="{width: ancillaryCostPrice.toString().length + 1 + 'ch'}"></div>
-								<div class="input-caret" :style="{left: ancillaryCostPrice.toString().length + 1 + 'ch'}"></div>
+								<input v-model="ancillaryStore.ancillaryCostPrice" @keyup.enter="ancillaryStore.pushAncillary()" id="ancillary-cost-price" class="input" type="number">
+								<div class="input-background" :style="{width: ancillaryStore.ancillaryCostPrice.toString().length + 1 + 'ch'}"></div>
+								<div class="input-caret" :style="{left: ancillaryStore.ancillaryCostPrice.toString().length + 1 + 'ch'}"></div>
 							</div>
 						</div>
-						<button @click.prevent="pushAncillary()" class="btn btn--small" type="button">+</button>
+						<button @click.prevent="ancillaryStore.pushAncillary()" class="btn btn--small" type="button">+</button>
 					</div>
-					<hr v-if="ancillaryCosts.length">
-					<div v-if="ancillaryCosts.length" class="card__content">
+					<hr v-if="ancillaryStore.ancillaryCosts.length">
+					<div v-if="ancillaryStore.ancillaryCosts.length" class="card__content">
 						<table class="table table--input">
 							<thead>
 								<tr>
@@ -242,26 +245,26 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr v-for="(ancillaryCost, index) in this.ancillaryCosts" :key="index">
+								<tr v-for="(ancillaryCost, index) in this.ancillaryStore.ancillaryCosts" :key="index">
 									<td>
-										<div v-if="isEditingAncillary[index]" class="input-container">
-											<input v-model="ancillaryCosts[index].name" @keyup.enter="toggleEdit(index, 'Ancillary')" class="input" type="text">
-											<div class="input-background" :style="{width: ancillaryCosts[index].name.length + 1 + 'ch'}"></div>
-											<div class="input-caret" :style="{left: ancillaryCosts[index].name.length + 1 + 'ch'}"></div>
+										<div v-if="ancillaryStore.isEditingAncillary[index]" class="input-container">
+											<input v-model="ancillaryStore.ancillaryCosts[index].name" @keyup.enter="toggleEdit(index, 'Ancillary')" class="input" type="text">
+											<div class="input-background" :style="{width: ancillaryStore.ancillaryCosts[index].name.length + 1 + 'ch'}"></div>
+											<div class="input-caret" :style="{left: ancillaryStore.ancillaryCosts[index].name.length + 1 + 'ch'}"></div>
 										</div>
 										<span v-else>{{ ancillaryCost.name }}</span>
 									</td>
 									<td>
-										<div v-if="isEditingAncillary[index]" class="input-container">
-											<input v-model="ancillaryCosts[index].price" @keyup.enter="toggleEdit(index, 'Ancillary')" class="input" type="number">
-											<div class="input-background" :style="{width: ancillaryCosts[index].price.toString().length + 1 + 'ch'}"></div>
-											<div class="input-caret" :style="{left: ancillaryCosts[index].price.toString().length + 1 + 'ch'}"></div>
+										<div v-if="ancillaryStore.isEditingAncillary[index]" class="input-container">
+											<input v-model="ancillaryStore.ancillaryCosts[index].price" @keyup.enter="toggleEdit(index, 'Ancillary')" class="input" type="number">
+											<div class="input-background" :style="{width: ancillaryStore.ancillaryCosts[index].price.toString().length + 1 + 'ch'}"></div>
+											<div class="input-caret" :style="{left: ancillaryStore.ancillaryCosts[index].price.toString().length + 1 + 'ch'}"></div>
 										</div>
 										<span v-else>{{ ancillaryCost.price }}</span>
 									</td>
 									<td>
-										<button class="text-button" @click.prevent="toggleEdit(index, 'Ancillary')" type="button">{{isEditingAncillary[index] ? "[Mentés]" : "[Szerkesztés]"}}</button>
-										<button class="text-button" @click.prevent="removeAncillary(index)" type="button">[Törlés]</button>
+										<button class="text-button" @click.prevent="toggleEdit(index, 'Ancillary')" type="button">{{ancillaryStore.isEditingAncillary[index] ? "[Mentés]" : "[Szerkesztés]"}}</button>
+										<button class="text-button" @click.prevent="ancillaryStore.removeAncillary(index)" type="button">[Törlés]</button>
 									</td>
 								</tr>
 							</tbody>
@@ -273,11 +276,11 @@
 			&nbsp;
 			<button @click.prevent=""><span class="text-black">A</span>jánlat Mentése</button>
 
-			<dialog :open="modalOpen" class="modal">
+			<dialog :open="modalState.modalOpen" class="modal">
 				<div class="modal-container">
 					<h2 class="modal__title">Hiba</h2>
-					<p v-for="e in errors">A(z) {{ e }} mező kitöltése kötelező.</p>
-					<button @click.prevent="toggleModal()" class="modal__button btn" type="button">Ok</button>
+					<p v-for="e in e.errors">A(z) {{ e }} mező kitöltése kötelező.</p>
+					<button @click.prevent="modalState.toggleModal()" class="modal__button btn" type="button">Ok</button>
 				</div>
 			</dialog>
 		</div>
@@ -312,59 +315,59 @@
 					</div>
 				</section>
 
-				<div v-if="workDetails.length">
+				<div v-if="workDetailsStore.workDetails.length">
 					<h2 class="h3">Feladatok:</h2>
 					<ul>
-						<li v-for="task in this.workDetails">{{ task }}</li>
+						<li v-for="task in this.workDetailsStore.workDetails">{{ task }}</li>
 					</ul>
 				</div>
 
-				<h3 v-if="ancillaryCosts.length || materials.length">Költségek:</h3>
+				<h3 v-if="ancillaryStore.ancillaryCosts.length || materialStore.materials.length">Költségek:</h3>
 				<table class="table table--output">
 					<tbody>
-						<tr v-if="materials.length">
+						<tr v-if="materialStore.materials.length">
 							<td colspan="4">
 								<h3 class="subheading mb-0">Anyagköltség:</h3>
 							</td>
 						</tr>
-						<tr v-if="materials.length">
+						<tr v-if="materialStore.materials.length">
 							<th>Megnevezés</th>
 							<th>Mennyiség</th>
 							<th>Egységár</th>
 							<th class="text-right">Összesen</th>
 						</tr>
-						<tr v-if="materials.length" v-for="material in this.materials">
+						<tr v-if="materialStore.materials.length" v-for="material in this.materialStore.materials">
 							<td>{{ material.name }}</td>
 							<td>{{ material.quantity }}&nbsp;{{ material.unit }}</td>
 							<td>{{ formatNumber(material.price) }}&nbsp;Ft/{{ material.unit }}</td>
 							<td class="text-right">{{ formatNumber(material.price * material.quantity) }}&nbsp;Ft</td>
 						</tr>
-						<tr v-if="materials.length" class="subtotal">
+						<tr v-if="materialStore.materials.length" class="subtotal">
 							<td colspan="3">Részösszesen:</td>
 							<td class="text-right text-dark">
-								<strong>{{ formatNumber(materialCost) }}&nbsp;Ft</strong>
+								<strong>{{ formatNumber(materialStore.materialCost) }}&nbsp;Ft</strong>
 							</td>
 						</tr>
 						<tr>
 							<td></td>
 						</tr>
-						<tr v-if="ancillaryCosts.length">
+						<tr v-if="ancillaryStore.ancillaryCosts.length">
 							<td colspan="4">
 								<h3 class="subheading mb-0">Egyéb Költségek:</h3>
 							</td>
 						</tr>
-						<tr v-if="ancillaryCosts.length">
+						<tr v-if="ancillaryStore.ancillaryCosts.length">
 							<th colspan="3">Megnevezés</th>
 							<th class="text-right">Összesen</th>
 						</tr>
-						<tr v-if="ancillaryCosts.length" v-for="ancillary in this.ancillaryCosts">
+						<tr v-if="ancillaryStore.ancillaryCosts.length" v-for="ancillary in this.ancillaryStore.ancillaryCosts">
 							<td colspan="3">{{ ancillary.name }}</td>
 							<td class="text-right">{{ formatNumber(ancillary.price) }}&nbsp;Ft</td>
 						</tr>
-						<tr v-if="ancillaryCosts.length" class="subtotal">
+						<tr v-if="ancillaryStore.ancillaryCosts.length" class="subtotal">
 							<td colspan="3">Részösszesen:</td>
 							<td class="text-right text-dark">
-								<strong>{{ formatNumber(ancillaryCost) }}&nbsp;Ft</strong>
+								<strong>{{ formatNumber(ancillaryStore.ancillaryCost) }}&nbsp;Ft</strong>
 							</td>
 						</tr>
 						<tr>
@@ -395,7 +398,13 @@ import 'moment/dist/locale/hu';
 import html2pdf from 'html2pdf.js'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
-import {ref} from "vue";
+import { useClientStore } from "@/stores/clientStore.js";
+import { useMaterialStore } from "@/stores/materialStore.js";
+import { useErrorStore } from "@/stores/errorStore.js";
+import { useDetailsStore } from "@/stores/workDetailsStore.js";
+import { useModalStore } from "@/stores/modalStore.js";
+import {useAncillaryStore} from "@/stores/ancillaryStore.js";
+
 moment.locale('hu')
 
 window.html2canvas = html2canvas
@@ -404,124 +413,38 @@ window.jsPDF = jsPDF
 export default {
 	data() {
 		return {
-			workDetail: "",
-			itemName: "",
-			itemQuantity: "",
-			itemUnit: "darab",
-			itemPrice: "",
-			ancillaryCostName: "",
-			ancillaryCostPrice: "",
-			isEditingWork: ref([]),
-			isEditingMaterial: ref([]),
-			isEditingAncillary: ref([]),
-			modalOpen: false,
+			modalState: useModalStore(),
 			menuOpen: false,
 			showCreateEdit: true,
 
 
-			personalDetails: {
-				customerName: "",
-				customerZip: "",
-				customerCity: "",
-				customerAddress: "",
-				customerTaxNumber: ""
-			},
+			personalDetails: useClientStore(),
 
-			workDetails: [],
-			materials: [],
-			ancillaryCosts: [],
+			workDetailsStore: useDetailsStore(),
+			materialStore: useMaterialStore(),
+			ancillaryStore: useAncillaryStore(),
       currentDate: moment().format('LL'),
       expirationDate: moment().add(2, 'weeks').format('LL'),
 
-			errors: []
+			e: useErrorStore()
 		}
 	},
 
 	methods: {
-		pushWorkDetail() {
-			if (this.validateInputs({"Új feladat" : this.workDetail})) {
-				this.workDetails.push(this.workDetail)
-				this.workDetail = ""
-			} else {
-				this.toggleModal();
-			}
-		},
-
-		pushItem() {
-			if (this.itemQuantity === "") {
-				this.itemQuantity = 1
-			}
-
-			if (this.validateInputs({"Anyag neve" : this.itemName, "Egységár" : this.itemPrice})) {
-
-				this.materials.push({
-					name: this.itemName,
-					quantity: this.itemQuantity,
-					unit: this.itemUnit,
-					price: this.itemPrice,
-					total: this.itemQuantity * this.itemPrice
-				})
-
-				this.workDetail= ""
-				this.itemName= ""
-				this.itemQuantity= ""
-				this.itemUnit= "darab"
-				this.itemPrice= ""
-
-			} else {
-				this.toggleModal()
-			}
-		},
-
-		pushAncillary() {
-			if (this.validateInputs({"Megnevezés" : this.ancillaryCostName, "Ár": this.ancillaryCostPrice})) {
-
-				this.ancillaryCosts.push({
-					name: this.ancillaryCostName,
-					price: this.ancillaryCostPrice,
-				})
-
-				this.ancillaryCostName = ""
-				this.ancillaryCostPrice = ""
-
-			} else {
-				this.toggleModal()
-			}
-		},
-
 		toggleEdit(index, list) {
 			if (list === "Work") {
-				this.isEditingWork[index] = !this.isEditingWork[index]
+				this.workDetailsStore.isEditingWork[index] = !this.workDetailsStore.isEditingWork[index]
 			} else if (list === "Material") {
-				this.isEditingMaterial[index] = !this.isEditingMaterial[index]
+				this.materialStore.isEditingMaterial[index] = !this.materialStore.isEditingMaterial[index]
 			} else if (list === "Ancillary") {
-				this.isEditingAncillary[index] = !this.isEditingAncillary[index]
+				this.ancillaryStore.isEditingAncillary[index] = !this.ancillaryStore.isEditingAncillary[index]
 			}
-		},
-
-		removeWork(index) {
-			this.workDetails.splice(index, 1)
-			this.isEditingWork.splice(index, 1)
-		},
-
-		removeItem(index) {
-			this.materials.splice(index, 1)
-			this.isEditingMaterial.splice(index, 1)
-		},
-
-		removeAncillary(index) {
-			this.ancillaryCosts.splice(index, 1)
-			this.isEditingAncillary.splice(index, 1)
 		},
 
 		formatNumber(num) {
 			return new Intl.NumberFormat('en-US', {
 				useGrouping: true
 			}).format(num).replace(/,/g, '\u00a0');
-		},
-
-		toggleModal() {
-			this.modalOpen = !this.modalOpen
 		},
 
 		toggleMenu() {
@@ -572,7 +495,7 @@ export default {
 						.from(document.getElementById(element))
 						.save();
 			} else {
-				this.toggleModal()
+				this.modalState.toggleModal()
 			}
 		}
 	},
@@ -581,25 +504,12 @@ export default {
 	computed: {
 		totalCost: {
 			get() {
-				return this.materialCost + this.ancillaryCost
+				return this.materialStore.materialCost + this.ancillaryStore.ancillaryCost
 			},
 			set() {
-				return this.materialCost + this.ancillaryCost
+				return this.materialStore.materialCost + this.ancillaryStore.ancillaryCost
 			},
 		},
-		materialCost() {
-		return this.materials.reduce((sum, item) => {
-				const price = parseFloat(item.price);
-				const quantity = parseFloat(item.quantity);
-				return sum + (isNaN(price) ? 0 : price * quantity);
-			}, 0);
-		},
-		ancillaryCost() {
-			return this.ancillaryCosts.reduce((sum, item) => {
-				const price = parseFloat(item.price);
-				return sum + (isNaN(price) ? 0 : price);
-			}, 0);
-		}
 	}
 }
 
